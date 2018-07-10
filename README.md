@@ -80,7 +80,7 @@ Here's an example route handler with push notification sending using token
 router.get("testfcm") { req -> Future<String> in
   let fcm = try req.make(FCM.self)
   let token = "c2BSqPOBoig:APA91bEMxvozKLY9DKjYpdHR8yjR0DScIDd7vqd-WSIsct4UHDT1U7cQU1n3PAwfSAlaH-UUTuX3x18oa5IF1pB2KmAQb-pIiSEX7NVh90IhbCVO7Fp30hguKUhzDum95WVw0MA385QgvCZWLCDx7540yPlD_5HU6g"
-  let message = Message(token: token, notification: Notification(title: "Vapor is awesome!", body: "Swift one love! ❤️"))
+  let message = FCMMessage(token: token, notification: Notification(title: "Vapor is awesome!", body: "Swift one love! ❤️"))
   return try fcm.sendMessage(req.client(), message: message)
 }
 ```

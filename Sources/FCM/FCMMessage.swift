@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Message: Codable {
+public struct FCMMessage: Codable {
     ///Output Only. The identifier of the message sent, in the format of projects/*/messages/{message_id}.
     public var name: String
     ///Input only. Arbitrary key/value payload.
