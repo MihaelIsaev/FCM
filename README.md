@@ -53,7 +53,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
 #### There are two ways
 
-##### 2. Using environment variables 👍
+##### 1. Using environment variables 👍
 ```swift
 let fcm = FCM()
 services.register(fcm, as: FCM.self)
