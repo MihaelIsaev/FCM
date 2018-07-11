@@ -25,18 +25,10 @@ public class FCM: FCMProvider {
     // MARK: Initialization
     
     /// Key should be PEM Private key
-    public init(email: String, projectId: String, pathToKey path: String) {
+    public init(email: String, projectId: String, key: String) {
         self.email = email
         self.projectId = projectId
-        let fm = FileManager.default
-        if !fm.fileExists(atPath: path) {
-            fatalError("FCM pem file doesn't exists")
-        }
-        if let data = fm.contents(atPath: path), let key = String(data: data, encoding: .utf8) {
-            self.key = key
-        } else {
-            fatalError("FCM unable to decode key file content")
-        }
+        self.key = key
         gAuthPayload = GAuthPayload(iss: email, sub: email, scope: scope, aud: audience)
         do {
             _jwt = try generateJWT()
