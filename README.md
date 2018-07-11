@@ -15,7 +15,7 @@
 <br>
 
 
-# Intro
+# Intro 👏
 
 It's a swift lib that gives ability to send push notifications through Firebase Cloud Messaging.
 
@@ -27,18 +27,18 @@ If you have great ideas of how to improve this package write me (@iMike) in [Vap
 
 Hope it'll be useful for someone :)
 
-### Install through Swift Package Manager
+### Install through Swift Package Manager ❤️
 
 Edit your `Package.swift`
 
 ```swift
 //add this repo to dependencies
-.package(url: "https://github.com/MihaelIsaev/FCM.git", from: "0.1.0")
+.package(url: "https://github.com/MihaelIsaev/FCM.git", from: "0.2.0")
 //and don't forget about targets
 //"FCM"
 ```
 
-### How it works
+### How it works ?
 
 First of all you should configure FCM in `configure.swift`
 
@@ -51,26 +51,44 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 }
 ```
 
-There are two ways
+#### There are two ways
 
-1. Manually
+##### 1. Manually 🤖
 ```swift
 let fcm = FCM(email: "firebase-adminsdk-0w4ba@example-3ab5c.iam.gserviceaccount.com",
               projectId: "example-3ab5c",
               pathToKey: "/tmp/fcm.pem")
 services.register(fcm, as: FCM.self)
 ```
-2. Using environment variables
+OR
+```swift
+let fcm = FCM(email: "firebase-adminsdk-0w4ba@example-3ab5c.iam.gserviceaccount.com",
+              projectId: "example-3ab5c",
+              key: "<YOUR PRIVATE KEY>")
+services.register(fcm, as: FCM.self)
+```
+
+##### 2. Using environment variables 👍
 ```swift
 let fcm = FCM()
 services.register(fcm, as: FCM.self)
 ```
 and don't forget to pass the following environment variables
 ```swift
+fcmServiceAccountKeyPath // /tmp/serviceAccountKey.json
+```
+OR
+```swift
 fcmEmail // firebase-adminsdk-0w4ba@example-3ab5c.iam.gserviceaccount.com
 fcmKeyPath // /tmp/fcm.pem
 fcmProjectId // example-3ab5c
 ```
+
+> ⚠️ **TIP:** `serviceAccountKey.json` you could get from [Firebase Console](https://console.firebase.google.com)
+>
+> 🔑 Just go to Settings -> Service Accounts tab and press **Create Private Key** button in e.g. NodeJS tab
+
+#### Let's send first push notification! 🚀
 
 Then you could send push notifications using token, topic or condition.
 
@@ -79,13 +97,14 @@ Here's an example route handler with push notification sending using token
 ```swift
 router.get("testfcm") { req -> Future<String> in
   let fcm = try req.make(FCM.self)
-  let token = "c2BSqPOBoig:APA91bEMxvozKLY9DKjYpdHR8yjR0DScIDd7vqd-WSIsct4UHDT1U7cQU1n3PAwfSAlaH-UUTuX3x18oa5IF1pB2KmAQb-pIiSEX7NVh90IhbCVO7Fp30hguKUhzDum95WVw0MA385QgvCZWLCDx7540yPlD_5HU6g"
-  let message = Message(token: token, notification: Notification(title: "Vapor is awesome!", body: "Swift one love! ❤️"))
+  let token = "<YOUR FIREBASE DEVICE TOKEN>"
+  let notification = FCMNotification(title: "Vapor is awesome!", body: "Swift one love! ❤️")
+  let message = FCMMessage(token: token, notification: notification)
   return try fcm.sendMessage(req.client(), message: message)
 }
 ```
 
 `fcm.sendMessage` returns message name like `projects/example-3ab5c/messages/1531222329648135`
 
-`Message` struct is absolutely the same as in Firebase docs https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages
+`FCMMessage` struct is absolutely the same as `Message` struct in Firebase docs https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages
 So you could take a look on its source code to build proper message.
