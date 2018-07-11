@@ -55,6 +55,11 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
 ##### 1. Manually 🤖
 ```swift
+let fcm = FCM(pathToServiceAccountKey: "/tmp/serviceAccountKey.json")
+services.register(fcm, as: FCM.self)
+```
+OR
+```swift
 let fcm = FCM(email: "firebase-adminsdk-0w4ba@example-3ab5c.iam.gserviceaccount.com",
               projectId: "example-3ab5c",
               pathToKey: "/tmp/fcm.pem")
