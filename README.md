@@ -53,7 +53,23 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
 #### There are two ways
 
-##### 1. Manually 🤖
+##### 2. Using environment variables 👍
+```swift
+let fcm = FCM()
+services.register(fcm, as: FCM.self)
+```
+and don't forget to pass the following environment variables
+```swift
+fcmServiceAccountKeyPath // /tmp/serviceAccountKey.json
+```
+OR
+```swift
+fcmEmail // firebase-adminsdk-0w4ba@example-3ab5c.iam.gserviceaccount.com
+fcmKeyPath // /tmp/fcm.pem
+fcmProjectId // example-3ab5c
+```
+
+##### 2. Manually 🤖
 ```swift
 let fcm = FCM(pathToServiceAccountKey: "/tmp/serviceAccountKey.json")
 services.register(fcm, as: FCM.self)
@@ -71,22 +87,6 @@ let fcm = FCM(email: "firebase-adminsdk-0w4ba@example-3ab5c.iam.gserviceaccount.
               projectId: "example-3ab5c",
               key: "<YOUR PRIVATE KEY>")
 services.register(fcm, as: FCM.self)
-```
-
-##### 2. Using environment variables 👍
-```swift
-let fcm = FCM()
-services.register(fcm, as: FCM.self)
-```
-and don't forget to pass the following environment variables
-```swift
-fcmServiceAccountKeyPath // /tmp/serviceAccountKey.json
-```
-OR
-```swift
-fcmEmail // firebase-adminsdk-0w4ba@example-3ab5c.iam.gserviceaccount.com
-fcmKeyPath // /tmp/fcm.pem
-fcmProjectId // example-3ab5c
 ```
 
 > ⚠️ **TIP:** `serviceAccountKey.json` you could get from [Firebase Console](https://console.firebase.google.com)
