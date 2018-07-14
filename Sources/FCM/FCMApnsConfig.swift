@@ -5,7 +5,7 @@ public struct FCMApnsConfig: Codable {
     public var payload: [String: String] = [:]
 
     /// Publically Initialize
-    public init(headers: [String: String], payload: [String: String]) {
+    public init(headers: [String: String] = [:], payload: [String: String]  = [:]) {
         self.headers = headers
         self.payload = payload
     }
