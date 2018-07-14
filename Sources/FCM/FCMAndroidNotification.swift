@@ -21,4 +21,7 @@ public struct FCMAndroidNotification: Codable {
     public var title_loc_key: String
     ///Variable string values to be used in place of the format specifiers in title_loc_key to use to localize the title text to the user's current localization. See Formatting and Styling for more information.
     public var title_loc_args: [String] = []
+
+    /// Publically Initialize
+    public init() { }
 }

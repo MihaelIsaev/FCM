@@ -11,4 +11,7 @@ public struct FCMAndroidConfig: Codable {
     public var data: [String: String] = [:]
     ///Notification to send to android devices.
     public var notification: FCMAndroidNotification
+
+    /// Publically Initialize
+    public init() { }
 }
