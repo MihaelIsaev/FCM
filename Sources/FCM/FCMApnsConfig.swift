@@ -11,6 +11,27 @@ public struct FCMApnsConfig: Codable {
         self.headers = headers
         self.payload = payload
     }
+
+    enum CodingKeys: String, CodingKey {
+        case headers, payload
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(headers, forKey: .headers)
+        if let payload = payload {
+            try container.encode(ApsWrapper(aps: payload), forKey: .payload)
+        }
+    }
+}
+
+// This solely exists to give the JSON nesecary as APS expects:
+// apns: {
+//   payload: {
+//     aps: {
+
+private struct ApsWrapper: Codable {
+    let aps: FCMAPNSPayload
 }
 
 // The following struct is based on
