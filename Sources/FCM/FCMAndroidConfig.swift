@@ -13,5 +13,19 @@ public struct FCMAndroidConfig: Codable {
     public var notification: FCMAndroidNotification
 
     /// Publically Initialize
-    public init() { }
+    public init(
+        collapse_key: String? = nil,
+        priority: FCMAndroidMessagePriority = .NORMAL,
+        ttl: String,
+        restricted_package_name: String,
+        data: [String: String] = [:],
+        notification: FCMAndroidNotification
+    ) {
+        self.collapse_key = collapse_key
+        self.priority = priority
+        self.ttl = ttl
+        self.restricted_package_name = restricted_package_name
+        self.data = data
+        self.notification = notification
+    }
 }

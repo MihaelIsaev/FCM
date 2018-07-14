@@ -23,5 +23,29 @@ public struct FCMAndroidNotification: Codable {
     public var title_loc_args: [String] = []
 
     /// Publically Initialize
-    public init() { }
+    public init(
+        title: String,
+        body: String,
+        icon: String,
+        color: String,
+        sound: String,
+        tag: String,
+        click_action: String,
+        body_loc_key: String,
+        body_loc_args: [String] = [],
+        title_loc_key: String,
+        title_loc_args: [String] = []
+    ) {
+        self.title = title
+        self.body = body
+        self.icon = icon
+        self.color = color
+        self.sound = sound
+        self.tag = tag
+        self.click_action = click_action
+        self.body_loc_key = body_loc_key
+        self.body_loc_args = body_loc_args
+        self.title_loc_key = title_loc_key
+        self.title_loc_args = title_loc_args
+    }
 }
