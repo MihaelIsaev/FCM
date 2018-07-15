@@ -13,18 +13,3 @@ final public class FCMApnsConfig: Codable {
         self.payload = payload
     }
 }
-
-// This solely exists to give the JSON nesecary as APS expects:
-// apns: {
-//   payload: {
-//     aps: {
-//     }
-//     CUSTOM_KEYS that will be stuck in the, so it must be open to extension
-
-public class FCMAPNSPayload: Codable {
-    var aps: FCMAPNSAPSObject?
-
-    public init(aps: FCMAPNSAPSObject) {
-        self.aps = aps
-    }
-}
