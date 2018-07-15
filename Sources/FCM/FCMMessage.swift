@@ -13,7 +13,7 @@ public struct FCMMessage: Codable {
     public var webpush: FCMWebpushConfig?
     ///Input only. Apple Push Notification Service specific options.
     public var apns: FCMApnsConfig?
-    
+
     //Union field target. Required. Input only. Target to send a message to. target can be only one of the following:
     ///Registration token to send a message to.
     public var token: String?
@@ -21,7 +21,7 @@ public struct FCMMessage: Codable {
     public var topic: String?
     ///Condition to send a message to, e.g. "'foo' in topics && 'bar' in topics".
     public var condition: String?
-    
+
     ///Initialization with device token
     public init(token: String,
                 notification: FCMNotification,
@@ -41,7 +41,7 @@ public struct FCMMessage: Codable {
         self.webpush = webpush
         self.apns = apns
     }
-    
+
     ///Initialization with topic
     public init(topic: String,
                 notification: FCMNotification,
@@ -61,7 +61,7 @@ public struct FCMMessage: Codable {
         self.webpush = webpush
         self.apns = apns
     }
-    
+
     ///Initialization with condition
     public init(condition: String,
                 notification: FCMNotification,
