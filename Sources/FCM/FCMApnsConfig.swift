@@ -23,4 +23,8 @@ final public class FCMApnsConfig: Codable {
 
 public class FCMAPNSPayload: Codable {
     var aps: FCMAPNSAPSObject?
+
+    public init(aps: FCMAPNSAPSObject) {
+        self.aps = aps
+    }
 }
