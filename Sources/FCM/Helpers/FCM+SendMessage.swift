@@ -2,7 +2,7 @@ import Foundation
 import Vapor
 
 extension FCM {
-    public func sendMessage(_ client: Client, message: FCMMessage) throws -> Future<String> {
+    public func sendMessage(_ client: Client, message: FCMMessageDefault) throws -> Future<String> {
         let url = actionsBaseURL + projectId + "/messages:send"
         return try getAccessToken(client).flatMap { accessToken in
             var headers = HTTPHeaders()
@@ -11,7 +11,7 @@ extension FCM {
             return client.post(url, headers: headers) { req throws in
                 struct Payload: Codable {
                     var validate_only: Bool
-                    var message: FCMMessage
+                    var message: FCMMessageDefault
                 }
                 let payload = Payload(validate_only: false, message: message)
                 try req.content.encode(payload, as: .json)
