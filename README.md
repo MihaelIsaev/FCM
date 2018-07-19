@@ -33,7 +33,7 @@ Edit your `Package.swift`
 
 ```swift
 //add this repo to dependencies
-.package(url: "https://github.com/MihaelIsaev/FCM.git", from: "0.3.0")
+.package(url: "https://github.com/MihaelIsaev/FCM.git", from: "0.4.1")
 //and don't forget about targets
 //"FCM"
 ```
