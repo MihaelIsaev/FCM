@@ -6,7 +6,7 @@ public class FCMAPNSPayload: FCMAPNSPayloadProtocol {
     /// The APS object, primary alert
     public var aps: FCMAPNSAPSObject
 
-    public init(aps: FCMAPNSAPSObject) {
-        self.aps = aps
+    public init(aps: FCMAPNSAPSObject? = nil) {
+        self.aps = aps ?? FCMAPNSAPSObject.default
     }
 }

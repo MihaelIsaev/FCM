@@ -48,27 +48,35 @@ public class FCMAPNSAPSObject: Codable {
         case mutableContent="mutable-content"
     }
     
-    init(alert: FCMAPNSAlertOrString? = nil,
-         badge: Int? = nil,
-         sound: String?,
-         contentAvailable: Bool? = nil,
-         category: String? = nil,
-         threadId: String? = nil,
-         mutableContent: Bool? = nil) {
-        let contentAvailable = contentAvailable ?? false
+    struct Config {
+        var alert: FCMAPNSAlertOrString?
+        var badge: Int?
+        var sound: String?
+        var contentAvailable: Bool?
+        var category: String?
+        var threadId: String?
+        var mutableContent: Bool?
+    }
+    
+    init(config: Config?) {
+        let contentAvailable = config?.contentAvailable ?? false
         if !contentAvailable {
-            self.alert = alert
-            self.badge = badge
-            self.sound = sound
+            alert = config?.alert
+            badge = config?.badge
+            sound = config?.sound
         }
         self.contentAvailable = contentAvailable ? 1 : 0
-        self.category = category
-        self.threadId = threadId
-        if let mutableContent = mutableContent {
-            self.mutableContent = mutableContent ? 1 : 0
+        category = config?.category
+        threadId = config?.threadId
+        if let value = config?.mutableContent {
+            mutableContent = value ? 1 : 0
         }
     }
-
+    
+    public static var `default`: FCMAPNSAPSObject {
+        return FCMAPNSAPSObject(config: nil)
+    }
+    
     public convenience init(alert: String? = nil,
                             badge: Int? = nil,
                             sound: String? = "default",
@@ -76,13 +84,13 @@ public class FCMAPNSAPSObject: Codable {
                             category: String? = nil,
                             threadId: String? = nil,
                             mutableContent: Bool? = nil) {
-        self.init(alert: FCMAPNSAlertOrString.fromRaw(alert),
-                  badge: badge,
-                  sound: sound,
-                  contentAvailable: contentAvailable,
-                  category: category,
-                  threadId: threadId,
-                  mutableContent: mutableContent)
+        self.init(config: Config(alert: FCMAPNSAlertOrString.fromRaw(alert),
+                                 badge: badge,
+                                 sound: sound,
+                                 contentAvailable: contentAvailable,
+                                 category: category,
+                                 threadId: threadId,
+                                 mutableContent: mutableContent))
     }
     
     public convenience init(alert: FCMAPNSAlert? = nil,
@@ -92,13 +100,13 @@ public class FCMAPNSAPSObject: Codable {
                             category: String? = nil,
                             threadId: String? = nil,
                             mutableContent: Bool? = nil) {
-        self.init(alert: FCMAPNSAlertOrString.fromRaw(alert),
-                  badge: badge,
-                  sound: sound,
-                  contentAvailable: contentAvailable,
-                  category: category,
-                  threadId: threadId,
-                  mutableContent: mutableContent)
+        self.init(config: Config(alert: FCMAPNSAlertOrString.fromRaw(alert),
+                                 badge: badge,
+                                 sound: sound,
+                                 contentAvailable: contentAvailable,
+                                 category: category,
+                                 threadId: threadId,
+                                 mutableContent: mutableContent))
     }
 }
 

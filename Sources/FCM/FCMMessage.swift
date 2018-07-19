@@ -110,7 +110,8 @@ extension FCMMessage where APNSPayload == FCMAPNSPayload {
                   data: data,
                   name: name,
                   android: android,
-                  webpush: webpush)
+                  webpush: webpush,
+                  apns: FCMApnsConfig.default)
     }
     
     /// Initialization with topic
@@ -125,7 +126,8 @@ extension FCMMessage where APNSPayload == FCMAPNSPayload {
                   data: data,
                   name: name,
                   android: android,
-                  webpush: webpush)
+                  webpush: webpush,
+                  apns: FCMApnsConfig.default)
     }
     
     /// Initialization with condition
@@ -140,6 +142,7 @@ extension FCMMessage where APNSPayload == FCMAPNSPayload {
                   data: data,
                   name: name,
                   android: android,
-                  webpush: webpush)
+                  webpush: webpush,
+                  apns: FCMApnsConfig.default)
     }
 }
