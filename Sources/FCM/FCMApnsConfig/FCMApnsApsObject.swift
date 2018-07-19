@@ -65,26 +65,28 @@ public class FCMApnsApsObject: Codable {
             badge = config?.badge
             sound = config?.sound
         }
-        self.contentAvailable = contentAvailable ? 1 : 0
+        if contentAvailable {
+            self.contentAvailable = 1
+        }
         category = config?.category
         threadId = config?.threadId
-        if let value = config?.mutableContent {
-            mutableContent = value ? 1 : 0
+        if let value = config?.mutableContent, value {
+            mutableContent = 1
         }
     }
     
     public static var `default`: FCMApnsApsObject {
-        return FCMApnsApsObject(config: nil)
+        return FCMApnsApsObject(alertString: nil, sound: "default")
     }
     
-    public convenience init(alert: String? = nil,
+    public convenience init(alertString: String?,
                             badge: Int? = nil,
-                            sound: String? = "default",
+                            sound: String?,
                             contentAvailable: Bool? = nil,
                             category: String? = nil,
                             threadId: String? = nil,
                             mutableContent: Bool? = nil) {
-        self.init(config: Config(alert: FCMApnsAlertOrString.fromRaw(alert),
+        self.init(config: Config(alert: FCMApnsAlertOrString.fromRaw(alertString),
                                  badge: badge,
                                  sound: sound,
                                  contentAvailable: contentAvailable,
@@ -95,7 +97,7 @@ public class FCMApnsApsObject: Codable {
     
     public convenience init(alert: FCMApnsAlert? = nil,
                             badge: Int? = nil,
-                            sound: String? = "default",
+                            sound: String?,
                             contentAvailable: Bool? = nil,
                             category: String? = nil,
                             threadId: String? = nil,

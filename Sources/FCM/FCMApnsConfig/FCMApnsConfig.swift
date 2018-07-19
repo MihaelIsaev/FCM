@@ -25,9 +25,7 @@ extension FCMApnsConfig where P == FCMApnsPayload {
         if let aps = aps {
             self.init(headers: headers, payload: FCMApnsPayload(aps: aps))
         } else {
-            let aps = FCMApnsApsObject(config: nil)
-            let paylaod = FCMApnsPayload(aps: aps)
-            self.init(headers: headers, payload: paylaod)
+            self.init(headers: headers, payload: FCMApnsPayload())
         }
     }
     
