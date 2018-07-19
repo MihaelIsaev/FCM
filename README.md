@@ -33,7 +33,7 @@ Edit your `Package.swift`
 
 ```swift
 //add this repo to dependencies
-.package(url: "https://github.com/MihaelIsaev/FCM.git", from: "0.4.1")
+.package(url: "https://github.com/MihaelIsaev/FCM.git", from: "0.5.0")
 //and don't forget about targets
 //"FCM"
 ```
@@ -93,6 +93,18 @@ services.register(fcm, as: FCM.self)
 >
 > 🔑 Just go to Settings -> Service Accounts tab and press **Create Private Key** button in e.g. NodeJS tab
 
+#### OPTIONAL: Set default configurations, e.g. to enable notification sound
+Add the following code to your `configure.swift`
+```swift
+fcm.apnsDefaultConfig = FCMApnsConfig(headers: [:],
+                                      aps: FCMApnsApsObject(sound: "default"))
+fcm.androidDefaultConfig = FCMAndroidConfig(ttl: "86400s",
+                                            restricted_package_name: "com.example.myapp",
+                                            notification: FCMAndroidNotification(sound: "default"))
+fcm.webpushDefaultConfig = FCMWebpushConfig(headers: [:],
+                                            data: [:],
+                                            notification: [:])
+```
 #### Let's send first push notification! 🚀
 
 Then you could send push notifications using token, topic or condition.
