@@ -1,8 +1,8 @@
 import Foundation
 
-public typealias FCMMessageDefault = FCMMessage<FCMAPNSPayload>
+public typealias FCMMessageDefault = FCMMessage<FCMApnsPayload>
 
-public class FCMMessage<APNSPayload>: Codable where APNSPayload: FCMAPNSPayloadProtocol {
+public class FCMMessage<APNSPayload>: Codable where APNSPayload: FCMApnsPayloadProtocol {
     /// Output Only.
     /// The identifier of the message sent,
     /// in the format of projects/*/messages/{message_id}.
@@ -97,7 +97,7 @@ public class FCMMessage<APNSPayload>: Codable where APNSPayload: FCMAPNSPayloadP
     }
 }
 
-extension FCMMessage where APNSPayload == FCMAPNSPayload {
+extension FCMMessage where APNSPayload == FCMApnsPayload {
     /// Initialization with device token
     public convenience init(token: String,
                 notification: FCMNotification,
