@@ -3,6 +3,18 @@ import Vapor
 
 extension FCM {
     public func sendMessage(_ client: Client, message: FCMMessageDefault) throws -> Future<String> {
+        if message.apns == nil,
+            let apnsDefaultConfig = apnsDefaultConfig {
+            message.apns = apnsDefaultConfig
+        }
+        if message.android == nil,
+            let androidDefaultConfig = androidDefaultConfig {
+            message.android = androidDefaultConfig
+        }
+        if message.webpush == nil,
+            let webpushDefaultConfig = webpushDefaultConfig {
+            message.webpush = webpushDefaultConfig
+        }
         let url = actionsBaseURL + projectId + "/messages:send"
         return try getAccessToken(client).flatMap { accessToken in
             var headers = HTTPHeaders()

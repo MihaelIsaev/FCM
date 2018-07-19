@@ -22,6 +22,12 @@ public class FCM: FCMProvider {
     var _jwt: String = ""
     var accessToken: String?
     
+    // MARK: Default configurations
+    
+    public var apnsDefaultConfig: FCMApnsConfig<FCMApnsPayload>?
+    public var androidDefaultConfig: FCMAndroidConfig?
+    public var webpushDefaultConfig: FCMWebpushConfig?
+    
     // MARK: Initialization
     
     /// Key should be PEM Private key
