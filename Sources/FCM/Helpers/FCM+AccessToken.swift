@@ -3,7 +3,7 @@ import Vapor
 
 extension FCM {
     func getAccessToken(_ client: Client) throws -> Future<String> {
-        if gAuthPayload.isValid, let token = accessToken {
+        if !gAuthPayload.hasExpired, let token = accessToken {
             return client.container.eventLoop.newSucceededFuture(result: token)
         }
         var payload: [String: String] = [:]

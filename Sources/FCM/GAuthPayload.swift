@@ -14,7 +14,7 @@ class GAuthPayload: JWTPayload {
     static var expirationClaim: ExpirationClaim {
         return ExpirationClaim(value: Date().addingTimeInterval(3600))
     }
-    
+
     init(iss: String, sub: String, scope: String, aud: String) {
         self.exp = GAuthPayload.expirationClaim
         self.iat = IssuedAtClaim(value: Date())
@@ -23,26 +23,20 @@ class GAuthPayload: JWTPayload {
         self.scope = scope
         self.aud = AudienceClaim(value: aud)
     }
-    
-    func verify() throws {
-        try exp.verify()
+
+    func verify(using signer: JWTSigner) throws {
+        // not used
     }
-    
-    var isValid: Bool {
+
+    var hasExpired: Bool {
         do {
-            try verify()
-            return true
-        } catch {
+            try exp.verifyNotExpired()
             return false
+        } catch {
+            return true
         }
     }
-    
-    func updateIfNeeded() {
-        if !isValid {
-            update()
-        }
-    }
-    
+
     func update() {
         self.exp = GAuthPayload.expirationClaim
         self.iat = IssuedAtClaim(value: Date())
