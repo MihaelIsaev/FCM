@@ -18,6 +18,12 @@ extension FCM {
             guard let data = res.http.body.data else {
                 throw Abort(.notFound, reason: "Data not found")
             }
+            if res.http.status.code != 200 {
+                let code = "Code: \(res.http.status.code)"
+                let message = "Message: \(String(data: data, encoding: .utf8) ?? "n/a")"
+                let reason = "[FCM] Unable to refresh access token. \(code) \(message)"
+                throw Abort(.internalServerError, reason: reason)
+            }
             let result = try JSONDecoder().decode(Result.self, from: data)
             return result.access_token
         }
