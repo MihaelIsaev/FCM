@@ -4,6 +4,7 @@ import JWT
 
 extension FCM {
     func generateJWT() throws -> String {
+        gAuthPayload.update()
         let pk = try RSAKey.private(pem: key)
         let signer = JWTSigner.rs256(key: pk)
         let jwt = JWT<GAuthPayload>(payload: gAuthPayload)
