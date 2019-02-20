@@ -13,7 +13,7 @@ public class FCMMessage<APNSPayload>: Codable where APNSPayload: FCMApnsPayloadP
     
     /// Input only.
     /// Basic notification template to use across all platforms.
-    public var notification: FCMNotification
+    public var notification: FCMNotification?
     
     /// Input only.
     /// Android specific options for messages sent through FCM connection server.
@@ -26,7 +26,7 @@ public class FCMMessage<APNSPayload>: Codable where APNSPayload: FCMApnsPayloadP
     /// Input only.
     /// Apple Push Notification Service specific options.
     public var apns: FCMApnsConfig<APNSPayload>?
-
+    
     //MARK: - Union field target. Required. Input only. Target to send a message to. target can be only one of the following:
     
     /// Registration token to send a message to.
@@ -37,10 +37,10 @@ public class FCMMessage<APNSPayload>: Codable where APNSPayload: FCMApnsPayloadP
     
     /// Condition to send a message to, e.g. "'foo' in topics && 'bar' in topics".
     public var condition: String?
-
+    
     /// Initialization with device token
     public init(token: String,
-                notification: FCMNotification,
+                notification: FCMNotification?,
                 data: [String: String]? = nil,
                 name: String? = nil,
                 android: FCMAndroidConfig? = nil,
@@ -56,10 +56,10 @@ public class FCMMessage<APNSPayload>: Codable where APNSPayload: FCMApnsPayloadP
         self.webpush = webpush
         self.apns = apns
     }
-
+    
     /// Initialization with topic
     public init(topic: String,
-                notification: FCMNotification,
+                notification: FCMNotification?,
                 data: [String: String]? = nil,
                 name: String? = nil,
                 android: FCMAndroidConfig? = nil,
@@ -75,10 +75,10 @@ public class FCMMessage<APNSPayload>: Codable where APNSPayload: FCMApnsPayloadP
         self.webpush = webpush
         self.apns = apns
     }
-
+    
     /// Initialization with condition
     public init(condition: String,
-                notification: FCMNotification,
+                notification: FCMNotification?,
                 data: [String: String]? = nil,
                 name: String? = nil,
                 android: FCMAndroidConfig? = nil,
@@ -100,7 +100,7 @@ public class FCMMessage<APNSPayload>: Codable where APNSPayload: FCMApnsPayloadP
 extension FCMMessage where APNSPayload == FCMApnsPayload {
     /// Initialization with device token
     public convenience init(token: String,
-                notification: FCMNotification,
+                notification: FCMNotification?,
                 data: [String: String]? = nil,
                 name: String? = nil,
                 android: FCMAndroidConfig? = nil,
@@ -116,7 +116,7 @@ extension FCMMessage where APNSPayload == FCMApnsPayload {
     
     /// Initialization with topic
     public convenience init(topic: String,
-                notification: FCMNotification,
+                notification: FCMNotification?,
                 data: [String: String]? = nil,
                 name: String? = nil,
                 android: FCMAndroidConfig? = nil,
@@ -132,7 +132,7 @@ extension FCMMessage where APNSPayload == FCMApnsPayload {
     
     /// Initialization with condition
     public convenience init(condition: String,
-                notification: FCMNotification,
+                notification: FCMNotification?,
                 data: [String: String]? = nil,
                 name: String? = nil,
                 android: FCMAndroidConfig? = nil,
