@@ -125,3 +125,66 @@ router.get("testfcm") { req -> Future<String> in
 
 `FCMMessage` struct is absolutely the same as `Message` struct in Firebase docs https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages
 So you could take a look on its source code to build proper message.
+
+## Bonus 🍾
+
+In my Vapor projects I'm using this extension for sending push notifications
+
+```swift
+import Vapor
+import Fluent
+import FCM
+
+protocol Firebaseable: Model {
+    var firebaseToken: String? { get set }
+}
+
+extension Firebaseable {
+    func sendPush(title: String, message: String, on req: Container) throws -> Future<Void> {
+        guard let token = firebaseToken else {
+            return req.eventLoop.newSucceededFuture(result: ())
+        }
+        return try Self.sendPush(title: title, message: message, token: token, on: req)
+    }
+    
+    static func sendPush(title: String, message: String, token: String, on container: Container) throws -> Future<Void> {
+        let fcm = try container.make(FCM.self)
+        let message = FCMMessage(token: token, notification: FCMNotification(title: title, body: message))
+        return try fcm.sendMessage(container.make(Client.self), message: message).transform(to: ()).catchFlatMap { error in
+            return container.requestPooledConnection(to: .psql).flatMap { conn in
+                return Self.query(on: conn).filter(\.firebaseToken == token).first().flatMap { model in
+                    defer { try? container.releasePooledConnection(conn, to: .psql) }
+                    guard var model = model else { return container.eventLoop.newSucceededFuture(result: ()) }
+                    model.firebaseToken = nil
+                    return model.save(on: conn).transform(to: ())
+                }.catchMap { _ in
+                    try? container.releasePooledConnection(conn, to: .psql)
+                }
+            }
+        }.transform(to: ())
+    }
+}
+```
+`catchFlatMap` here do the dirty job, it removes `expired` firebase tokens.
+
+I conform e.g. my `Token` model to `Firebaseable`
+
+```swift
+final class Token: Content {
+    var id: UUID?
+    var token: String
+    var userId: User.ID
+    var firebaseToken: String?
+}
+extension Token: Firebaseable {}
+```
+
+So then you'll be able to send pushes by querying tokens like this
+```swift
+Token.query(on: req)
+    .join(\User.id, to: \Token.userId)
+    .filter(\User.email == "benny@gmail.com")
+    .all().map { tokens in
+    try tokens.map { try $0.sendPush(title: "Test push", message: "Hello world!", on: req) }.flatten(on: req)
+}
+```
