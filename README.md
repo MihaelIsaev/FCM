@@ -150,6 +150,12 @@ extension Firebaseable {
     static func sendPush(title: String, message: String, token: String, on container: Container) throws -> Future<Void> {
         let fcm = try container.make(FCM.self)
         let message = FCMMessage(token: token, notification: FCMNotification(title: title, body: message))
+        return try fcm.sendMessage(container.make(Client.self), message: message).transform(to: ())
+    }
+}
+```
+Optionally you can handle `sendMessage` error through defining `catchFlatMap` after it, e.g. for removing broken tokens or anything else
+```swift
         return try fcm.sendMessage(container.make(Client.self), message: message).transform(to: ()).catchFlatMap { error in
             return container.requestPooledConnection(to: .psql).flatMap { conn in
                 return Self.query(on: conn).filter(\.firebaseToken == token).first().flatMap { model in
@@ -161,13 +167,10 @@ extension Firebaseable {
                     try? container.releasePooledConnection(conn, to: .psql)
                 }
             }
-        }.transform(to: ())
-    }
-}
+        }
 ```
-`catchFlatMap` here do the dirty job, it removes `expired` firebase tokens.
 
-I conform e.g. my `Token` model to `Firebaseable`
+e.g. I'm conforming my `Token` model to `Firebaseable`
 
 ```swift
 final class Token: Content {
