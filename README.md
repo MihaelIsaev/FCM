@@ -153,6 +153,12 @@ extension Firebaseable {
         return try fcm.sendMessage(container.make(Client.self), message: message).transform(to: ())
     }
 }
+
+extension Array where Element == Firebaseable {
+    func sendPush(title: String, message: String, on container: Container) throws -> Future<Void> {
+        return try map { try $0.sendPush(title: title, message: message, on: container) }.flatten(on: container)
+    }
+}
 ```
 Optionally you can handle `sendMessage` error through defining `catchFlatMap` after it, e.g. for removing broken tokens or anything else
 ```swift
@@ -170,7 +176,7 @@ Optionally you can handle `sendMessage` error through defining `catchFlatMap` af
         }
 ```
 
-e.g. I'm conforming my `Token` model to `Firebaseable`
+Then e.g. I'm conforming my `Token` model to `Firebaseable`
 
 ```swift
 final class Token: Content {
@@ -188,6 +194,6 @@ Token.query(on: req)
     .join(\User.id, to: \Token.userId)
     .filter(\User.email == "benny@gmail.com")
     .all().map { tokens in
-    try tokens.map { try $0.sendPush(title: "Test push", message: "Hello world!", on: req) }.flatten(on: req)
+    try tokens.sendPush(title: "Test push", message: "Hello world!", on: req)
 }
 ```
