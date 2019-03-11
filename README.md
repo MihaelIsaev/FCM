@@ -162,19 +162,29 @@ extension Array where Element == Firebaseable {
 ```
 Optionally you can handle `sendMessage` error through defining `catchFlatMap` after it, e.g. for removing broken tokens or anything else
 ```swift
-        return try fcm.sendMessage(container.make(Client.self), message: message).transform(to: ()).catchFlatMap { error in
+return try fcm.sendMessage(container.make(Client.self), message: message).transform(to: ()).catchFlatMap { error in
+    guard let googleError = error as? GoogleError, let fcmError = googleError.fcmError else {
+        return container.eventLoop.newSucceededFuture(result: ())
+    }
+    switch fcmError.errorCode {
+        case .unregistered: // drop token only if unregistered
             return container.requestPooledConnection(to: .psql).flatMap { conn in
                 return Self.query(on: conn).filter(\.firebaseToken == token).first().flatMap { model in
                     defer { try? container.releasePooledConnection(conn, to: .psql) }
                     guard var model = model else { return container.eventLoop.newSucceededFuture(result: ()) }
                     model.firebaseToken = nil
                     return model.save(on: conn).transform(to: ())
-                }.catchMap { _ in
+                }.always {
                     try? container.releasePooledConnection(conn, to: .psql)
                 }
             }
-        }
+        default:
+            return container.eventLoop.newSucceededFuture(result: ())
+    }
+}
 ```
+
+> Special thanks to @grahamburgsma for `GoogleError` and `FCMError` #10
 
 Then e.g. I'm conforming my `Token` model to `Firebaseable`
 
