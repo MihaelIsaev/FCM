@@ -28,18 +28,23 @@ extension FCM {
                 let payload = Payload(validate_only: false, message: message)
                 try req.content.encode(payload, as: .json)
             }.map { res in
-                struct Result: Codable {
-                    var name: String
-                }
                 guard let data = res.http.body.data else {
                     throw Abort(.notFound, reason: "Data not found")
                 }
-                do {
-                    let result = try JSONDecoder().decode(Result.self, from: data)
-                    return result.name
-                } catch {
-                    throw Abort(.internalServerError, reason: String(data: data, encoding: .utf8) ?? "Unable to decode Firebase response")
+
+                guard 200 ..< 300 ~= res.http.status.code else {
+                    if let googleError = try? res.content.syncDecode(GoogleError.self) {
+                        throw googleError
+                    } else {
+                        let reason = String(data: data, encoding: .utf8) ?? "Unable to decode Firebase response"
+                        throw Abort(.internalServerError, reason: reason)
+                    }
                 }
+
+                struct Result: Codable {
+                    var name: String
+                }
+                return try res.content.syncDecode(Result.self).name
             }
         }
     }
