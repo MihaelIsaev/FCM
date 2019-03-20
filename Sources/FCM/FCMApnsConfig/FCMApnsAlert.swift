@@ -36,6 +36,7 @@ public struct FCMApnsAlert: Codable {
 
     enum CodingKeys: String, CodingKey {
         case title
+        case subtitle
         case body
         case titleLocKey = "title-loc-key"
         case titleLocArgs = "title-loc-args"
