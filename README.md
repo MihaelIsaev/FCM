@@ -154,7 +154,7 @@ extension Firebaseable {
     }
 }
 
-extension Array where Element == Firebaseable {
+extension Array where Element: Firebaseable {
     func sendPush(title: String, message: String, on container: Container) throws -> Future<Void> {
         return try map { try $0.sendPush(title: title, message: message, on: container) }.flatten(on: container)
     }
