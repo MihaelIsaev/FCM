@@ -5,7 +5,9 @@ import Crypto
 
 // MARK: Service
 
-public protocol FCMProvider: Service {}
+public protocol FCMProvider: Service {
+    func sendMessage(_ client: Client, message: FCMMessageDefault) throws -> Future<String>
+}
 
 // MARK: Engine
 
