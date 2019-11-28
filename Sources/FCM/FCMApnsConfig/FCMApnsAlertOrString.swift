@@ -30,14 +30,14 @@ public enum FCMApnsAlertOrString: Codable, Equatable {
         return .string(v)
     }
     
-    public var alertPayload: FCMApnsAlert? {
+    public var asPayload: FCMApnsAlert? {
         if case let .alert(payload) = self {
             return payload
         }
         return nil
     }
     
-    public var alertMessage: String? {
+    public var asMessage: String? {
         if case let .string(message) = self {
             return message
         }
