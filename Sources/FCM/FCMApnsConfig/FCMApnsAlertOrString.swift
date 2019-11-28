@@ -1,6 +1,6 @@
 /// Internal helper for different alert payload types
-enum FCMApnsAlertOrString: Codable {
-    init(from decoder: Decoder) throws {
+public enum FCMApnsAlertOrString: Codable {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let string = try? container.decode(String.self) {
             self = .string(string)
@@ -10,7 +10,7 @@ enum FCMApnsAlertOrString: Codable {
         }
     }
 
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
         case let .alert(alert):
@@ -28,6 +28,20 @@ enum FCMApnsAlertOrString: Codable {
     static func fromRaw(_ v: String?) -> FCMApnsAlertOrString? {
         guard let v = v else { return nil }
         return .string(v)
+    }
+    
+    public var alertPayload: FCMApnsAlert? {
+        if case let .alert(payload) = self {
+            return payload
+        }
+        return nil
+    }
+    
+    public var alertMessage: String? {
+        if case let .string(message) = self {
+            return message
+        }
+        return nil
     }
 
     /// A container for alerts
