@@ -1,4 +1,4 @@
-public struct FCMAndroidConfig: Codable {
+public struct FCMAndroidConfig: Codable, Equatable {
     /// An identifier of a group of messages that can be collapsed, so that only the last message gets sent when delivery can be resumed.
     /// A maximum of 4 different collapse keys is allowed at any given time.
     public var collapse_key: String?

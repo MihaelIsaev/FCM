@@ -1,7 +1,7 @@
-/// Use it for your custom payload class
+/// Use it for your custom payload model
 ///
 /// Example code:
-///     class MyCustomPayload: FCMApnsPayloadProtocol {
+///     struct MyCustomPayload: FCMApnsPayloadProtocol {
 ///         var aps: FCMApnsApsObject
 ///         var myCustomKey: String
 ///
@@ -10,6 +10,6 @@
 ///             self.myCustomKey = myCustomKey
 ///         }
 ///     }
-public protocol FCMApnsPayloadProtocol: Codable {
+public protocol FCMApnsPayloadProtocol: Codable, Equatable {
     var aps: FCMApnsApsObject { get set }
 }

@@ -1,5 +1,5 @@
 /// Internal helper for different alert payload types
-public enum FCMApnsAlertOrString: Codable {
+public enum FCMApnsAlertOrString: Codable, Equatable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let string = try? container.decode(String.self) {

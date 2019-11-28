@@ -1,4 +1,4 @@
-public struct FCMAndroidNotification: Codable {
+public struct FCMAndroidNotification: Codable, Equatable {
     /// The notification's title.
     /// If present, it will override FCMNotification.title.
     public var title: String?
