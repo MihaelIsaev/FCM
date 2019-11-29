@@ -80,12 +80,12 @@ public struct FCMApnsApsObject: Codable, Equatable {
     }
     
     public init(alertString: String?,
-                            badge: Int? = nil,
-                            sound: String?,
-                            contentAvailable: Bool? = nil,
-                            category: String? = nil,
-                            threadId: String? = nil,
-                            mutableContent: Bool? = nil) {
+                badge: Int? = nil,
+                sound: String?,
+                contentAvailable: Bool? = nil,
+                category: String? = nil,
+                threadId: String? = nil,
+                mutableContent: Bool? = nil) {
         self.init(config: Config(alert: FCMApnsAlertOrString.fromRaw(alertString),
                                  badge: badge,
                                  sound: sound,
@@ -96,12 +96,12 @@ public struct FCMApnsApsObject: Codable, Equatable {
     }
     
     public init(alert: FCMApnsAlert? = nil,
-                            badge: Int? = nil,
-                            sound: String?,
-                            contentAvailable: Bool? = nil,
-                            category: String? = nil,
-                            threadId: String? = nil,
-                            mutableContent: Bool? = nil) {
+                badge: Int? = nil,
+                sound: String?,
+                contentAvailable: Bool? = nil,
+                category: String? = nil,
+                threadId: String? = nil,
+                mutableContent: Bool? = nil) {
         self.init(config: Config(alert: FCMApnsAlertOrString.fromRaw(alert),
                                  badge: badge,
                                  sound: sound,
