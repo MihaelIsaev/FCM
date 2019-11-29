@@ -1,4 +1,4 @@
-public struct FCMApnsAlert: Codable {
+public struct FCMApnsAlert: Codable, Equatable {
     /// The title of the notification.
     /// Apple Watch displays this string in the short look notification interface.
     /// Specify a string that is quickly understood by the user.

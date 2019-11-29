@@ -1,6 +1,6 @@
 // The following struct is based on
 // https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification
-public class FCMApnsApsObject: Codable {
+public struct FCMApnsApsObject: Codable, Equatable {
     /// The information for displaying an alert.
     /// A dictionary is recommended.
     /// If you specify a string, the alert displays your string as the body text.
@@ -79,13 +79,13 @@ public class FCMApnsApsObject: Codable {
         return FCMApnsApsObject(alertString: nil, sound: "default")
     }
     
-    public convenience init(alertString: String?,
-                            badge: Int? = nil,
-                            sound: String?,
-                            contentAvailable: Bool? = nil,
-                            category: String? = nil,
-                            threadId: String? = nil,
-                            mutableContent: Bool? = nil) {
+    public init(alertString: String?,
+                badge: Int? = nil,
+                sound: String?,
+                contentAvailable: Bool? = nil,
+                category: String? = nil,
+                threadId: String? = nil,
+                mutableContent: Bool? = nil) {
         self.init(config: Config(alert: FCMApnsAlertOrString.fromRaw(alertString),
                                  badge: badge,
                                  sound: sound,
@@ -95,13 +95,13 @@ public class FCMApnsApsObject: Codable {
                                  mutableContent: mutableContent))
     }
     
-    public convenience init(alert: FCMApnsAlert? = nil,
-                            badge: Int? = nil,
-                            sound: String?,
-                            contentAvailable: Bool? = nil,
-                            category: String? = nil,
-                            threadId: String? = nil,
-                            mutableContent: Bool? = nil) {
+    public init(alert: FCMApnsAlert? = nil,
+                badge: Int? = nil,
+                sound: String?,
+                contentAvailable: Bool? = nil,
+                category: String? = nil,
+                threadId: String? = nil,
+                mutableContent: Bool? = nil) {
         self.init(config: Config(alert: FCMApnsAlertOrString.fromRaw(alert),
                                  badge: badge,
                                  sound: sound,

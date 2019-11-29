@@ -1,5 +1,5 @@
 /// Internal helper for different alert payload types
-public enum FCMApnsAlertOrString: Codable {
+public enum FCMApnsAlertOrString: Codable, Equatable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let string = try? container.decode(String.self) {
@@ -30,14 +30,14 @@ public enum FCMApnsAlertOrString: Codable {
         return .string(v)
     }
     
-    public var alertPayload: FCMApnsAlert? {
+    public var asPayload: FCMApnsAlert? {
         if case let .alert(payload) = self {
             return payload
         }
         return nil
     }
     
-    public var alertMessage: String? {
+    public var asMessage: String? {
         if case let .string(message) = self {
             return message
         }
