@@ -6,7 +6,12 @@ public struct FCMAndroidNotification: Codable, Equatable {
     /// The notification's body text.
     /// If present, it will override FCMNotification.body.
     public var body: String?
-    
+
+    /// The notification's channel id (new in Android O).
+    /// The app must create a channel with this channel ID before any notification with this channel ID is received.
+    /// If you don't send this channel ID in the request, or if the channel ID provided has not yet been created by the app, FCM uses the channel ID specified in the app manifest.
+    public var android_channel_id: String?
+
     /// The notification's icon. Sets the notification icon to myicon for drawable resource myicon.
     /// If you don't send this key in the request,
     /// FCM displays the launcher icon specified in your app manifest.
@@ -49,6 +54,7 @@ public struct FCMAndroidNotification: Codable, Equatable {
     /// Public Initializer
     public init(title: String? = nil,
                 body: String? = nil,
+                android_channel_id: String? = nil,
                 icon: String? = nil,
                 color: String? = nil,
                 sound: String? = nil,
@@ -60,6 +66,7 @@ public struct FCMAndroidNotification: Codable, Equatable {
                 title_loc_args: [String]? = nil) {
         self.title = title
         self.body = body
+        self.android_channel_id = android_channel_id
         self.icon = icon
         self.color = color
         self.sound = sound
