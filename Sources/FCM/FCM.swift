@@ -1,47 +1,112 @@
 import Vapor
 import Foundation
 import JWT
-import Crypto
-
-// MARK: Service
-
-public protocol FCMProvider: Service {
-    func sendMessage(_ client: Client, message: FCMMessageDefault) throws -> Future<String>
-}
 
 // MARK: Engine
 
-public class FCM: FCMProvider {
-    let email: String
-    let key: String
-    let projectId: String
+public struct FCM {
+    let application: Application
+    
+    let client: HTTPClient
     
     let scope = "https://www.googleapis.com/auth/cloud-platform"
     let audience = "https://www.googleapis.com/oauth2/v4/token"
     let actionsBaseURL = "https://fcm.googleapis.com/v1/projects/"
     
-    let gAuthPayload: GAuthPayload
-    var _jwt: String = ""
-    var accessToken: String?
-    
     // MARK: Default configurations
     
-    public var apnsDefaultConfig: FCMApnsConfig<FCMApnsPayload>?
-    public var androidDefaultConfig: FCMAndroidConfig?
-    public var webpushDefaultConfig: FCMWebpushConfig?
+    public var apnsDefaultConfig: FCMApnsConfig<FCMApnsPayload>? {
+        get { configuration?.apnsDefaultConfig }
+        set { configuration?.apnsDefaultConfig = newValue }
+    }
+    
+    public var androidDefaultConfig: FCMAndroidConfig? {
+        get { configuration?.androidDefaultConfig }
+        set { configuration?.androidDefaultConfig = newValue }
+    }
+    
+    public var webpushDefaultConfig: FCMWebpushConfig? {
+        get { configuration?.webpushDefaultConfig }
+        set { configuration?.webpushDefaultConfig = newValue }
+    }
     
     // MARK: Initialization
     
-    /// Key should be PEM Private key
-    public init(email: String, projectId: String, key: String) {
-        self.email = email
-        self.projectId = projectId
-        self.key = key
-        gAuthPayload = GAuthPayload(iss: email, sub: email, scope: scope, aud: audience)
-        do {
-            _jwt = try generateJWT()
-        } catch {
-            fatalError("FCM Unable to generate JWT: \(error)")
+    public init(application: Application) {
+        self.application = application
+        application.client.configuration.ignoreUncleanSSLShutdown = true
+        self.client = application.client.http
+    }
+}
+
+// MARK: Cache
+
+extension FCM {
+    struct ConfigurationKey: StorageKey {
+        typealias Value = FCMConfiguration
+    }
+
+    public var configuration: FCMConfiguration? {
+        get {
+            application.storage[ConfigurationKey.self]
+        }
+        nonmutating set {
+            application.storage[ConfigurationKey.self] = newValue
+            if let newValue = newValue {
+                warmUpCache(with: newValue.email)
+            }
+        }
+    }
+    
+    private func warmUpCache(with email: String) {
+        if gAuth == nil {
+            gAuth = GAuthPayload(iss: email, sub: email, scope: scope, aud: audience)
+        }
+        if jwt == nil {
+            do {
+                jwt = try generateJWT()
+            } catch {
+                fatalError("FCM Unable to generate JWT: \(error)")
+            }
+        }
+    }
+    
+    struct JWTKey: StorageKey {
+        typealias Value = String
+    }
+    
+    var jwt: String? {
+        get {
+            application.storage[JWTKey.self]
+        }
+        nonmutating set {
+            application.storage[JWTKey.self] = newValue
+        }
+    }
+    
+    struct AccessTokenKey: StorageKey {
+        typealias Value = String
+    }
+    
+    var accessToken: String? {
+        get {
+            application.storage[AccessTokenKey.self]
+        }
+        nonmutating set {
+            application.storage[AccessTokenKey.self] = newValue
+        }
+    }
+    
+    struct GAuthKey: StorageKey {
+        typealias Value = GAuthPayload
+    }
+    
+    var gAuth: GAuthPayload? {
+        get {
+            application.storage[GAuthKey.self]
+        }
+        nonmutating set {
+            application.storage[GAuthKey.self] = newValue
         }
     }
 }

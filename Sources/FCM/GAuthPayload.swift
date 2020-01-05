@@ -1,7 +1,7 @@
 import JWT
 import Foundation
 
-class GAuthPayload: JWTPayload {
+struct GAuthPayload: JWTPayload {
     let uid: String = UUID().uuidString
     
     var exp: ExpirationClaim
@@ -23,6 +23,15 @@ class GAuthPayload: JWTPayload {
         self.scope = scope
         self.aud = AudienceClaim(value: aud)
     }
+    
+    private init(iss: IssuerClaim, sub: SubjectClaim, scope: String, aud: AudienceClaim) {
+        self.exp = GAuthPayload.expirationClaim
+        self.iat = IssuedAtClaim(value: Date())
+        self.iss = iss
+        self.sub = sub
+        self.scope = scope
+        self.aud = aud
+    }
 
     func verify(using signer: JWTSigner) throws {
         // not used
@@ -37,8 +46,7 @@ class GAuthPayload: JWTPayload {
         }
     }
 
-    func update() {
-        self.exp = GAuthPayload.expirationClaim
-        self.iat = IssuedAtClaim(value: Date())
+    func updated() -> Self {
+        GAuthPayload(iss: iss, sub: sub, scope: scope, aud: aud)
     }
 }
