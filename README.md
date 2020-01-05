@@ -5,7 +5,7 @@
         <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT License">
     </a>
     <a href="https://swift.org">
-        <img src="https://img.shields.io/badge/swift-4.1-brightgreen.svg" alt="Swift 5.1">
+        <img src="https://img.shields.io/badge/swift-5.1-brightgreen.svg" alt="Swift 5.1">
     </a>
     <a href="https://twitter.com/VaporRussia">
         <img src="https://img.shields.io/badge/twitter-VaporRussia-5AA9E7.svg" alt="Twitter">
@@ -21,7 +21,7 @@ It's a swift lib that gives ability to send push notifications through Firebase 
 
 Built for Vapor4 and depends on `JWT` Vapor lib.
 
-Vapor3 version available in `vapor3` branch and from `1.0.0` tag.
+> 💡Vapor3 version is available in `vapor3` branch and from `1.0.0` tag
 
 If you have great ideas of how to improve this package write me (@iMike) in [Vapor's discord chat](http://vapor.team) or just send pull request.
 
