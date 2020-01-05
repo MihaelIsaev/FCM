@@ -33,7 +33,7 @@ Edit your `Package.swift`
 
 ```swift
 //add this repo to dependencies
-.package(url: "https://github.com/MihaelIsaev/FCM.git", from: "0.7.4")
+.package(url: "https://github.com/MihaelIsaev/FCM.git", from: "1.0.0")
 //and don't forget about targets
 //"FCM"
 ```
@@ -146,7 +146,7 @@ extension Firebaseable {
         }
         return try Self.sendPush(title: title, message: message, token: token, on: req)
     }
-    
+
     static func sendPush(title: String, message: String, token: String, on container: Container) throws -> Future<Void> {
         let fcm = try container.make(FCM.self)
         let message = FCMMessage(token: token, notification: FCMNotification(title: title, body: message))
