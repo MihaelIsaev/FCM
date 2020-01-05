@@ -6,16 +6,15 @@
 //
 
 public enum FCMAndroidNotificationVisibility: String, Codable, Equatable {
-
-    ///    If unspecified, default to Visibility.PRIVATE.
+    /// If unspecified, default to Visibility.PRIVATE.
     case unspecified = "VISIBILITY_UNSPECIFIED"
 
-    ///    Show this notification on all lockscreens, but conceal sensitive or private information on secure lockscreens.
-    case `private`   = "PRIVATE"
+    /// Show this notification on all lockscreens, but conceal sensitive or private information on secure lockscreens.
+    case `private` = "PRIVATE"
 
-    ///    Show this notification in its entirety on all lockscreens.
-    case `public`    = "PUBLIC"
+    /// Show this notification in its entirety on all lockscreens.
+    case `public` = "PUBLIC"
 
-    ///    Do not reveal any part of this notification on a secure lockscreen.
-    case secret      = "SECRET"
+    /// Do not reveal any part of this notification on a secure lockscreen.
+    case secret = "SECRET"
 }
