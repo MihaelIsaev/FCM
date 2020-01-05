@@ -23,7 +23,7 @@ Built for Vapor4 and depends on `JWT` Vapor lib.
 
 > 💡Vapor3 version is available in `vapor3` branch and from `1.0.0` tag
 
-If you have great ideas of how to improve this package write me (@iMike) in [Vapor's discord chat](http://vapor.team) or just send pull request.
+If you have great ideas of how to improve this package write me (@iMike#3049) in [Vapor's discord chat](http://vapor.team) or just send pull request.
 
 Hope it'll be useful for someone :)
 
