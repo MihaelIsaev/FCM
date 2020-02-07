@@ -78,7 +78,7 @@ public struct FCMApnsApsObject: Codable, Equatable {
             badge = config?.badge
             sound = config?.sound
         }
-        if let value = config?.priority, value {
+        if let value = config?.priority {
             priority = value
         }
         if contentAvailable {
