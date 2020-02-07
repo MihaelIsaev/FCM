@@ -44,7 +44,7 @@ public struct FCMApnsApsObject: Codable, Equatable {
     /// Use your extension to modify the notification’s content.
     public var mutableContent: Int?
 
-    enum Priority: String {
+    public enum Priority: String {
         case normal
         case high
     }
