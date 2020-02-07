@@ -26,6 +26,12 @@ public struct FCMApnsApsObject: Codable, Equatable {
     /// This string must correspond to the identifier
     /// of one of the UNNotificationCategory objects you register at launch time.
     public var category: String?
+
+    /// Sets the priority of the message
+    /// Valid values are "normal" and "high." On iOS, these correspond to APNs priorities 5 and 10.
+    /// For information about how to prepare sounds, see priority.
+    /// priority: https://firebase.google.com/docs/cloud-messaging/http-server-ref
+    public var priority: String?
     
     /// The background notification flag.
     /// To perform a silent background update,
@@ -38,32 +44,42 @@ public struct FCMApnsApsObject: Codable, Equatable {
     /// Use your extension to modify the notification’s content.
     public var mutableContent: Int?
 
+    enum Priority: String {
+        case normal
+        case high
+    }
+
     enum CodingKeys: String, CodingKey {
         case alert
         case badge
         case sound
+        case priority
         case contentAvailable = "content-available"
         case category
         case threadId="thread-id"
         case mutableContent="mutable-content"
     }
-    
+
     struct Config {
         var alert: FCMApnsAlertOrString?
         var badge: Int?
         var sound: String?
+        var priority: String?
         var contentAvailable: Bool?
         var category: String?
         var threadId: String?
         var mutableContent: Bool?
     }
-    
+
     init(config: Config?) {
         let contentAvailable = config?.contentAvailable ?? false
         if !contentAvailable {
             alert = config?.alert
             badge = config?.badge
             sound = config?.sound
+        }
+        if let value = config?.priority {
+            priority = value
         }
         if contentAvailable {
             self.contentAvailable = 1
@@ -82,6 +98,7 @@ public struct FCMApnsApsObject: Codable, Equatable {
     public init(alertString: String?,
                 badge: Int? = nil,
                 sound: String?,
+                priority: String? = nil,
                 contentAvailable: Bool? = nil,
                 category: String? = nil,
                 threadId: String? = nil,
@@ -89,6 +106,7 @@ public struct FCMApnsApsObject: Codable, Equatable {
         self.init(config: Config(alert: FCMApnsAlertOrString.fromRaw(alertString),
                                  badge: badge,
                                  sound: sound,
+                                 priority: priority,
                                  contentAvailable: contentAvailable,
                                  category: category,
                                  threadId: threadId,
@@ -98,6 +116,7 @@ public struct FCMApnsApsObject: Codable, Equatable {
     public init(alert: FCMApnsAlert? = nil,
                 badge: Int? = nil,
                 sound: String?,
+                priority: String? = nil,
                 contentAvailable: Bool? = nil,
                 category: String? = nil,
                 threadId: String? = nil,
@@ -105,6 +124,7 @@ public struct FCMApnsApsObject: Codable, Equatable {
         self.init(config: Config(alert: FCMApnsAlertOrString.fromRaw(alert),
                                  badge: badge,
                                  sound: sound,
+                                 priority: priority,
                                  contentAvailable: contentAvailable,
                                  category: category,
                                  threadId: threadId,
