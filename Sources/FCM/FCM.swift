@@ -34,7 +34,9 @@ public struct FCM {
     
     public init(application: Application) {
         self.application = application
-        application.client.configuration.ignoreUncleanSSLShutdown = true
+        if !application.client.configuration.ignoreUncleanSSLShutdown {
+            application.client.configuration.ignoreUncleanSSLShutdown = true
+        }
         self.client = application.client.http
     }
 }
