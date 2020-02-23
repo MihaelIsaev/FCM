@@ -3,6 +3,14 @@ import Vapor
 
 extension FCM {
     public func send(_ message: FCMMessageDefault) -> EventLoopFuture<String> {
+        _send(message)
+    }
+    
+    public func send(_ message: FCMMessageDefault, on eventLoop: EventLoop) -> EventLoopFuture<String> {
+        _send(message).hop(to: eventLoop)
+    }
+    
+    private func _send(_ message: FCMMessageDefault) -> EventLoopFuture<String> {
         guard let configuration = self.configuration else {
             fatalError("FCM not configured. Use app.fcm.configuration = ...")
         }
