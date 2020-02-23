@@ -96,7 +96,7 @@ func routes(_ app: Application) throws {
         let token = "<YOUR FIREBASE DEVICE TOKEN>" // get it from iOS/Android SDK
         let notification = FCMNotification(title: "Vapor is awesome!", body: "Swift one love! ❤️")
         let message = FCMMessage(token: token, notification: notification)
-        return req.fcm.send(message).map { name in
+        return req.fcm.send(message, on: req.eventLoop).map { name in
             return "Just sent: \(name)"
         }
     }
