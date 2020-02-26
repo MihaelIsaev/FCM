@@ -73,15 +73,16 @@ func configure(_ app: Application) throws {
 #### OPTIONAL: Set default configurations, e.g. to enable notification sound
 Add the following code to your `configure.swift` after `app.fcm.configuration = ...`
 ```swift
-app.fcm.configuration?.apnsDefaultConfig = FCMApnsConfig(headers: [:], aps: FCMApnsApsObject(sound: "default"))
+app.fcm.configuration?.apnsDefaultConfig = FCMApnsConfig(headers: [:], 
+                                                         aps: FCMApnsApsObject(sound: "default"))
 
 app.fcm.configuration?.androidDefaultConfig = FCMAndroidConfig(ttl: "86400s",
-                                                restricted_package_name: "com.example.myapp",
-                                                notification: FCMAndroidNotification(sound: "default"))
+                                                               restricted_package_name: "com.example.myapp",
+                                                               notification: FCMAndroidNotification(sound: "default"))
                                                 
-                                                app.fcm.configuration?.webpushDefaultConfig = FCMWebpushConfig(headers: [:],
-                                                data: [:],
-                                                notification: [:])
+app.fcm.configuration?.webpushDefaultConfig = FCMWebpushConfig(headers: [:],
+                                                               data: [:],
+                                                               notification: [:])
 ```
 #### Let's send first push notification! 🚀
 
