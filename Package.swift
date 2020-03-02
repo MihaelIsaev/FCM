@@ -17,7 +17,12 @@ let package = Package(
         .package(url: "https://github.com/vapor/jwt.git", from: "4.0.0-rc"),
     ],
     targets: [
-        .target(name: "FCM", dependencies: ["Vapor", "JWT"]),
-        .testTarget(name: "FCMTests", dependencies: ["FCM"]),
+        .target(name: "FCM", dependencies: [
+            .product(name: "Vapor", package: "vapor"),
+            .product(name: "JWT", package: "jwt"),
+        ]),
+        .testTarget(name: "FCMTests", dependencies: [
+            .target(name: "FCM"),
+        ]),
     ]
 )
