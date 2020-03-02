@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "FCM",
     platforms: [
-       .macOS(.v10_14)
+       .macOS(.v10_15)
     ],
     products: [
         //Vapor client for Firebase Cloud Messaging
@@ -13,8 +13,8 @@ let package = Package(
     ],
     dependencies: [
         // 💧 A server-side Swift web framework.
-        .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0-beta.2"),
-        .package(url: "https://github.com/vapor/jwt.git", from: "4.0.0-beta.2"),
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0-rc"),
+        .package(url: "https://github.com/vapor/jwt.git", from: "4.0.0-rc"),
     ],
     targets: [
         .target(name: "FCM", dependencies: ["Vapor", "JWT"]),
