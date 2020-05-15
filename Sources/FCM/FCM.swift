@@ -12,6 +12,7 @@ public struct FCM {
     let scope = "https://www.googleapis.com/auth/cloud-platform"
     let audience = "https://www.googleapis.com/oauth2/v4/token"
     let actionsBaseURL = "https://fcm.googleapis.com/v1/projects/"
+    let iidURL = "https://iid.googleapis.com/iid/v1:"
     
     // MARK: Default configurations
     

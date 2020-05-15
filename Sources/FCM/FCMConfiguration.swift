@@ -4,6 +4,8 @@ import Vapor
 public struct FCMConfiguration {
     let email, projectId, key: String
     
+    let serverKey = Environment.get("FCM_SERVER_KEY")
+    
     // MARK: Default configurations
     
     public var apnsDefaultConfig: FCMApnsConfig<FCMApnsPayload>?
