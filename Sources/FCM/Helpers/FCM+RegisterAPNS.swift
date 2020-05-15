@@ -22,6 +22,13 @@ extension RegisterAPNSID {
     }
 }
 
+extension RegisterAPNSID {
+    public static var envSandbox: RegisterAPNSID {
+        let id: RegisterAPNSID = .env
+        return .init(appBundleId: id.appBundleId, sandbox: true)
+    }
+}
+
 public struct APNSToFirebaseToken {
     public let registration_token, apns_token: String
     public let isRegistered: Bool
@@ -109,7 +116,7 @@ extension FCM {
                 let sandbox: Bool
                 let apns_tokens: [String]
             }
-            let payload = Payload(application: appBundleId, sandbox: false, apns_tokens: tokens)
+            let payload = Payload(application: appBundleId, sandbox: sandbox, apns_tokens: tokens)
             let payloadData = try JSONEncoder().encode(payload)
             
             var headers = HTTPHeaders()
