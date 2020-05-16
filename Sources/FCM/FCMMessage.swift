@@ -39,7 +39,7 @@ public class FCMMessage<APNSPayload>: Codable where APNSPayload: FCMApnsPayloadP
     public var condition: String?
     
     /// Initialization with device token
-    public init(token: String,
+    public init(token: String? = nil,
                 notification: FCMNotification?,
                 data: [String: String]? = nil,
                 name: String? = nil,
