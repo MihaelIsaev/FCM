@@ -3,8 +3,7 @@ import Vapor
 
 public struct FCMConfiguration {
     let email, projectId, key: String
-    
-    let serverKey = Environment.get("FCM_SERVER_KEY")
+    let serverKey, senderId: String?
     
     // MARK: Default configurations
     
@@ -14,16 +13,20 @@ public struct FCMConfiguration {
     
     // MARK: Initializers
     
-    public init (email: String, projectId: String, key: String) {
+    public init (email: String, projectId: String, key: String, serverKey: String? = nil, senderId: String? = nil) {
         self.email = email
         self.projectId = projectId
         self.key = key
+        self.serverKey = serverKey ?? Environment.get("FCM_SERVER_KEY")
+        self.senderId = senderId ?? Environment.get("FCM_SENDER_ID")
     }
     
-    public init (email: String, projectId: String, keyPath: String) {
+    public init (email: String, projectId: String, keyPath: String, serverKey: String? = nil, senderId: String? = nil) {
         self.email = email
         self.projectId = projectId
         self.key = Self.readKey(from: keyPath)
+        self.serverKey = serverKey ?? Environment.get("FCM_SERVER_KEY")
+        self.senderId = senderId ?? Environment.get("FCM_SENDER_ID")
     }
     
     public init (pathToServiceAccountKey path: String) {
@@ -31,6 +34,8 @@ public struct FCMConfiguration {
         self.email = s.client_email
         self.projectId = s.project_id
         self.key = s.private_key
+        self.serverKey = s.server_key ?? Environment.get("FCM_SERVER_KEY")
+        self.senderId = s.sender_id ?? Environment.get("FCM_SENDER_ID")
     }
     
     // MARK: Static initializers
@@ -48,7 +53,9 @@ public struct FCMConfiguration {
             else {
             fatalError("FCM envCredentials not set")
         }
-        return .init(email: email, projectId: projectId, keyPath: keyPath)
+        let serverKey = Environment.get("FCM_SERVER_KEY")
+        let senderId = Environment.get("FCM_SENDER_ID")
+        return .init(email: email, projectId: projectId, keyPath: keyPath, serverKey: serverKey, senderId: senderId)
     }
     
     /// It will try to read path to service account key from environment variables
@@ -73,6 +80,7 @@ public struct FCMConfiguration {
     
     private struct ServiceAccount: Codable {
         let project_id, private_key, client_email: String
+        let server_key, sender_id: String?
     }
     
     private static func readServiceAccount(at path: String) -> ServiceAccount {
