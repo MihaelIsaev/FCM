@@ -183,4 +183,8 @@ application.fcm.registerAPNS(
 }
 ```
 
+> 💡 Please note that push token taken from Xcode while debugging is for `sandbox`, so either use `.envSandbox` or don't forget to set `sandbox: true`
+
+## Contributors
+
 > Special thanks to @grahamburgsma for `GoogleError` and `FCMError` #10
