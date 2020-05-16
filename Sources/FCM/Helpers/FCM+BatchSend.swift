@@ -33,7 +33,7 @@ extension FCM {
         }
         var preparedTokens: [[String]] = []
         tokens.enumerated().forEach { i, token in
-            if Double(i).truncatingRemainder(dividingBy: 1) == 0 {
+            if Double(i).truncatingRemainder(dividingBy: 20) == 0 {
                 preparedTokens.append([token])
             } else {
                 if var arr = preparedTokens.popLast() {
