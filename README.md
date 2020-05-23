@@ -52,15 +52,22 @@ func configure(_ app: Application) throws {
     /// put into your environment variables the following key:
     /// FCM_SERVICE_ACCOUNT_KEY_PATH=path/to/serviceAccountKey.json
     app.fcm.configuration = .envServiceAccountKey
+    
+    /// case 3
+    /// put into your environment variables the following keys:
+    /// FCM_EMAIL=...          // `client_email` in service.json
+    /// FCM_PROJECT_ID=...     // `project_id` in service.json
+    /// FCM_PRIVATE_KEY=...    // `private_key` in service.json
+    app.fcm.configuration = .envServiceAccountKeyFields
 
-    /// case 2
+    /// case 3
     /// put into your environment variables the following keys:
     /// FCM_EMAIL=...
     /// FCM_PROJECT_ID=...
     /// FCM_KEY_PATH=path/to/key.pem
     app.fcm.configuration = .envCredentials
 
-    /// case 3
+    /// case 4
     /// manually
     app.fcm.configuration = .init(email: "...", projectId: "...", key: "...")
 }
