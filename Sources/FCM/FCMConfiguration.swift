@@ -65,6 +65,22 @@ public struct FCMConfiguration {
         return .init(pathToServiceAccountKey: path)
     }
     
+    /// It will try to read
+    /// - FCM_EMAIL - client_email
+    /// - FCM_PROJECT_ID - project_id
+    /// - FCM_PRIVATE_KEY - private_key
+    /// credentials from environment variables
+    public static var envServiceAccountKeyFields: FCMConfiguration {
+        guard
+            let email = Environment.get("FCM_EMAIL"),
+            let projectId = Environment.get("FCM_PROJECT_ID"),
+            let rawPrivateKey = Environment.get("FCM_PRIVATE_KEY")
+            else {
+            fatalError("FCM envCredentials not set")
+        }
+        return .init(email: email, projectId: projectId, key: rawPrivateKey.replacingOccurrences(of: "\\n", with: "\n"))
+    }
+    
     // MARK: Helpers
     
     private static func readKey(from path: String) -> String {
