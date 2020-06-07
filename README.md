@@ -5,7 +5,7 @@
         <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT License">
     </a>
     <a href="https://swift.org">
-        <img src="https://img.shields.io/badge/swift-5.1-brightgreen.svg" alt="Swift 5.1">
+        <img src="https://img.shields.io/badge/swift-5.2-brightgreen.svg" alt="Swift 5.2">
     </a>
     <a href="https://discord.gg/q5wCPYv">
         <img src="https://img.shields.io/badge/CLICK_HERE_TO_DISCUSS_THIS_LIB-SWIFT.STREAM-FD6F32.svg" alt="Swift.Stream">
@@ -33,9 +33,9 @@ Edit your `Package.swift`
 
 ```swift
 //add this repo to dependencies
-.package(url: "https://github.com/MihaelIsaev/FCM.git", from: "2.6.0")
+.package(url: "https://github.com/MihaelIsaev/FCM.git", from: "2.7.0")
 //and don't forget about targets
-//"FCM"
+//.product(name: "FCM", package: "FCM")
 ```
 
 ### How it works ?
@@ -53,7 +53,7 @@ func configure(_ app: Application) throws {
     /// FCM_SERVICE_ACCOUNT_KEY_PATH=path/to/serviceAccountKey.json
     app.fcm.configuration = .envServiceAccountKey
     
-    /// case 3
+    /// case 2
     /// put into your environment variables the following keys:
     /// FCM_EMAIL=...          // `client_email` in service.json
     /// FCM_PROJECT_ID=...     // `project_id` in service.json
