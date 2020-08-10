@@ -35,9 +35,9 @@ extension FCM {
                 let validate_only: Bool = false
                 let message: FCMMessageDefault
             }
-            let payload = Payload(message: message)
 
             return self.client.post(URI(string: url), headers: headers) { (req) in
+                let payload = Payload(message: message)
                 try req.content.encode(payload)
             }
         }
@@ -52,7 +52,7 @@ extension FCM {
             }
 
             struct Result: Codable {
-                var name: String
+                let name: String
             }
             guard let result = try? res.content.decode(Result.self) else {
                 throw Abort(.notFound, reason: "Data not found")

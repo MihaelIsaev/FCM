@@ -16,7 +16,7 @@ extension FCM {
                 "assertion": try self.getJWT(),
             ])
         }
-        .flatMapThrowing { res throws -> String  in
+        .flatMapThrowing { res -> String in
             if res.status.code != 200 {
                 let code = "Code: \(res.status.code)"
                 let message = "Message: \(res.content))"
