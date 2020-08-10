@@ -7,7 +7,7 @@ import JWT
 public struct FCM {
     let application: Application
     
-    let client: HTTPClient
+    let client: Client
     
     let scope = "https://www.googleapis.com/auth/cloud-platform"
     let audience = "https://www.googleapis.com/oauth2/v4/token"
@@ -38,7 +38,7 @@ public struct FCM {
         if !application.http.client.configuration.ignoreUncleanSSLShutdown {
             application.http.client.configuration.ignoreUncleanSSLShutdown = true
         }
-        self.client = application.http.client.shared
+        self.client = application.client
     }
 }
 

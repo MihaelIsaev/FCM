@@ -27,37 +27,37 @@ extension FCM {
             message.webpush = webpushDefaultConfig
         }
         let url = actionsBaseURL + configuration.projectId + "/messages:send"
-        return getAccessToken().flatMapThrowing { accessToken throws -> HTTPClient.Request in
-            struct Payload: Codable {
-                let validate_only: Bool
+        return getAccessToken().flatMap { accessToken -> EventLoopFuture<ClientResponse> in
+            var headers = HTTPHeaders()
+            headers.bearerAuthorization = .init(token: accessToken)
+
+            struct Payload: Content {
+                let validate_only: Bool = false
                 let message: FCMMessageDefault
             }
-            let payload = Payload(validate_only: false, message: message)
-            let payloadData = try JSONEncoder().encode(payload)
-            
-            var headers = HTTPHeaders()
-            headers.add(name: "Authorization", value: "Bearer \(accessToken)")
-            headers.add(name: "Content-Type", value: "application/json")
-            
-            return try .init(url: url, method: .POST, headers: headers, body: .data(payloadData))
-        }.flatMap { request in
-            return self.client.execute(request: request).flatMapThrowing { res in
-                guard 200 ..< 300 ~= res.status.code else {
-                    if let body = res.body, let googleError = try? JSONDecoder().decode(GoogleError.self, from: body) {
-                        throw googleError
-                    } else {
-                        let reason = res.body?.debugDescription ?? "Unable to decode Firebase response"
-                        throw Abort(.internalServerError, reason: reason)
-                    }
-                }
-                struct Result: Codable {
-                    var name: String
-                }
-                guard let body = res.body, let result = try? JSONDecoder().decode(Result.self, from: body) else {
-                    throw Abort(.notFound, reason: "Data not found")
-                }
-                return result.name
+            let payload = Payload(message: message)
+
+            return self.client.post(URI(string: url), headers: headers) { (req) in
+                try req.content.encode(payload)
             }
+        }
+        .flatMapThrowing { res in
+            guard 200 ..< 300 ~= res.status.code else {
+                if let googleError = try? res.content.decode(GoogleError.self) {
+                    throw googleError
+                } else {
+                    let reason = res.body?.debugDescription ?? "Unable to decode Firebase response"
+                    throw Abort(.internalServerError, reason: reason)
+                }
+            }
+
+            struct Result: Codable {
+                var name: String
+            }
+            guard let result = try? res.content.decode(Result.self) else {
+                throw Abort(.notFound, reason: "Data not found")
+            }
+            return result.name
         }
     }
 }
