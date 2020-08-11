@@ -27,31 +27,24 @@ extension FCM {
         }
         let url = self.iidURL + "batchRemove"
         return getAccessToken().flatMap { accessToken -> EventLoopFuture<ClientResponse> in
-            struct Payload: Content {
-                let to: String
-                let registration_tokens: [String]
-
-                init(to: String, registration_tokens: [String]) {
-                    self.to = "/topics/\(to)"
-                    self.registration_tokens = registration_tokens
-                }
-            }
-
             var headers = HTTPHeaders()
             headers.add(name: .authorization, value: "key=\(serverKey)")
 
             return self.client.post(URI(string: url), headers: headers) { (req) in
+                struct Payload: Content {
+                    let to: String
+                    let registration_tokens: [String]
+
+                    init(to: String, registration_tokens: [String]) {
+                        self.to = "/topics/\(to)"
+                        self.registration_tokens = registration_tokens
+                    }
+                }
                 let payload = Payload(to: name, registration_tokens: tokens)
                 try req.content.encode(payload)
             }
-        }.flatMapThrowing { res in
-            guard 200 ..< 300 ~= res.status.code else {
-                if let googleError = try? res.content.decode(GoogleError.self) {
-                    throw googleError
-                } else {
-                    throw Abort(.internalServerError, reason: res.body?.description)
-                }
-            }
         }
+        .validate()
+        .map { _ in () }
     }
 }

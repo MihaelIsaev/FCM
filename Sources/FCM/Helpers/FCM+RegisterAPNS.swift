@@ -123,21 +123,15 @@ extension FCM {
             let payload = Payload(application: appBundleId, sandbox: sandbox, apns_tokens: tokens)
             try req.content.encode(payload)
         }
+        .validate()
         .flatMapThrowing { res in
-            guard 200 ..< 300 ~= res.status.code else {
-                let reason = res.body?.debugDescription ?? "FCM: Register APNS: unable to decode error response"
-                throw Abort(.internalServerError, reason: reason)
-            }
-
             struct Result: Codable {
                 struct Result: Codable {
                     let registration_token, apns_token, status: String
                 }
                 let results: [Result]
             }
-            guard let result = try? res.content.decode(Result.self) else {
-                throw Abort(.notFound, reason: "FCM: Register APNS: empty response")
-            }
+            let result = try res.content.decode(Result.self)
             return result.results.map {
                 .init(registration_token: $0.registration_token, apns_token: $0.apns_token, isRegistered: $0.status == "OK")
             }

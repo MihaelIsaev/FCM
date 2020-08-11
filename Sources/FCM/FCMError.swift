@@ -1,3 +1,5 @@
+import Vapor
+
 public struct GoogleError: Error, Decodable {
     public let code: Int
     public let message: String
@@ -37,5 +39,21 @@ public struct FCMError: Error, Decodable {
         case apnsAuth = "APNS_AUTH_ERROR"
         case unavailable = "UNAVAILABLE"
         case `internal` = "INTERNAL"
+    }
+}
+
+extension EventLoopFuture where Value == ClientResponse {
+    func validate() -> EventLoopFuture<ClientResponse> {
+        return flatMapThrowing { (response) in
+            guard 200 ..< 300 ~= response.status.code else {
+                if let error = try? response.content.decode(GoogleError.self) {
+                    throw error
+                }
+                let body = response.body.map(String.init) ?? ""
+                throw Abort(.internalServerError, reason: "FCM: Unexpected error '\(body)'")
+            }
+
+            return response
+        }
     }
 }

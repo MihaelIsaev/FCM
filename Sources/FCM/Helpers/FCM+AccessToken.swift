@@ -16,20 +16,12 @@ extension FCM {
                 "assertion": try self.getJWT(),
             ])
         }
+        .validate()
         .flatMapThrowing { res -> String in
-            if res.status.code != 200 {
-                let code = "Code: \(res.status.code)"
-                let message = "Message: \(res.content))"
-                let reason = "[FCM] Unable to refresh access token. \(code) \(message)"
-                throw Abort(.internalServerError, reason: reason)
-            }
-
             struct Result: Codable {
                 var access_token: String
             }
-            guard let result = try? res.content.decode(Result.self) else {
-                throw Abort(.notFound, reason: "Data not found")
-            }
+            let result = try res.content.decode(Result.self)
             return result.access_token
         }
     }

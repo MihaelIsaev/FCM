@@ -26,37 +26,27 @@ extension FCM {
             let webpushDefaultConfig = webpushDefaultConfig {
             message.webpush = webpushDefaultConfig
         }
+
         let url = actionsBaseURL + configuration.projectId + "/messages:send"
         return getAccessToken().flatMap { accessToken -> EventLoopFuture<ClientResponse> in
             var headers = HTTPHeaders()
             headers.bearerAuthorization = .init(token: accessToken)
 
-            struct Payload: Content {
-                let validate_only: Bool = false
-                let message: FCMMessageDefault
-            }
-
             return self.client.post(URI(string: url), headers: headers) { (req) in
+                struct Payload: Content {
+                    let validate_only: Bool = false
+                    let message: FCMMessageDefault
+                }
                 let payload = Payload(message: message)
                 try req.content.encode(payload)
             }
         }
+        .validate()
         .flatMapThrowing { res in
-            guard 200 ..< 300 ~= res.status.code else {
-                if let googleError = try? res.content.decode(GoogleError.self) {
-                    throw googleError
-                } else {
-                    let reason = res.body?.debugDescription ?? "Unable to decode Firebase response"
-                    throw Abort(.internalServerError, reason: reason)
-                }
-            }
-
             struct Result: Codable {
                 let name: String
             }
-            guard let result = try? res.content.decode(Result.self) else {
-                throw Abort(.notFound, reason: "Data not found")
-            }
+            let result = try res.content.decode(Result.self)
             return result.name
         }
     }
