@@ -5,7 +5,7 @@ public struct RegisterAPNSID {
     let appBundleId: String
     let serverKey: String?
     let sandbox: Bool
-    
+
     public init (appBundleId: String, serverKey: String? = nil, sandbox: Bool = false) {
         self.appBundleId = appBundleId
         self.serverKey = serverKey
@@ -37,7 +37,7 @@ public struct APNSToFirebaseToken {
 extension FCM {
     /// Helper method which registers your pure APNS token in Firebase Cloud Messaging
     /// and returns firebase tokens for each APNS token
-    /// 
+    ///
     /// Convenient way
     ///
     /// Declare `RegisterAPNSID` via extension
@@ -53,7 +53,7 @@ extension FCM {
         on eventLoop: EventLoop? = nil) -> EventLoopFuture<[APNSToFirebaseToken]> {
         registerAPNS(appBundleId: id.appBundleId, serverKey: id.serverKey, sandbox: id.sandbox, tokens: tokens, on: eventLoop)
     }
-    
+
     /// Helper method which registers your pure APNS token in Firebase Cloud Messaging
     /// and returns firebase tokens for each APNS token
     ///
@@ -72,7 +72,7 @@ extension FCM {
         on eventLoop: EventLoop? = nil) -> EventLoopFuture<[APNSToFirebaseToken]> {
         registerAPNS(appBundleId: id.appBundleId, serverKey: id.serverKey, sandbox: id.sandbox, tokens: tokens, on: eventLoop)
     }
-    
+
     /// Helper method which registers your pure APNS token in Firebase Cloud Messaging
     /// and returns firebase tokens for each APNS token
     public func registerAPNS(
@@ -83,7 +83,7 @@ extension FCM {
         on eventLoop: EventLoop? = nil) -> EventLoopFuture<[APNSToFirebaseToken]> {
         registerAPNS(appBundleId: appBundleId, serverKey: serverKey, sandbox: sandbox, tokens: tokens, on: eventLoop)
     }
-    
+
     /// Helper method which registers your pure APNS token in Firebase Cloud Messaging
     /// and returns firebase tokens for each APNS token
     public func registerAPNS(
@@ -110,43 +110,30 @@ extension FCM {
             fatalError("FCM: Register APNS: Server Key is missing.")
         }
         let url = iidURL + "batchImport"
-        return eventLoop.future().flatMapThrowing { accessToken throws -> HTTPClient.Request in
-            struct Payload: Codable {
+
+        var headers = HTTPHeaders()
+        headers.add(name: .authorization, value: "key=\(serverKey)")
+
+        return self.client.post(URI(string: url), headers: headers) { (req) in
+            struct Payload: Content {
                 let application: String
                 let sandbox: Bool
                 let apns_tokens: [String]
             }
             let payload = Payload(application: appBundleId, sandbox: sandbox, apns_tokens: tokens)
-            let payloadData = try JSONEncoder().encode(payload)
-            
-            var headers = HTTPHeaders()
-            headers.add(name: "Authorization", value: "key=\(serverKey)")
-            headers.add(name: "Content-Type", value: "application/json")
-            
-            return try .init(url: url, method: .POST, headers: headers, body: .data(payloadData))
-        }.flatMap { request in
-            return self.client.execute(request: request).flatMapThrowing { res in
-                guard 200 ..< 300 ~= res.status.code else {
-                    guard
-                        let bb = res.body,
-                        let bytes = bb.getBytes(at: 0, length: bb.readableBytes),
-                        let reason = String(bytes: bytes, encoding: .utf8) else {
-                        throw Abort(.internalServerError, reason: "FCM: Register APNS: unable to decode error response")
-                    }
-                    throw Abort(.internalServerError, reason: reason)
-                }
+            try req.content.encode(payload)
+        }
+        .validate()
+        .flatMapThrowing { res in
+            struct Result: Codable {
                 struct Result: Codable {
-                    struct Result: Codable {
-                        let registration_token, apns_token, status: String
-                    }
-                    var results: [Result]
+                    let registration_token, apns_token, status: String
                 }
-                guard let body = res.body, let result = try? JSONDecoder().decode(Result.self, from: body) else {
-                    throw Abort(.notFound, reason: "FCM: Register APNS: empty response")
-                }
-                return result.results.map {
-                    .init(registration_token: $0.registration_token, apns_token: $0.apns_token, isRegistered: $0.status == "OK")
-                }
+                let results: [Result]
+            }
+            let result = try res.content.decode(Result.self)
+            return result.results.map {
+                .init(registration_token: $0.registration_token, apns_token: $0.apns_token, isRegistered: $0.status == "OK")
             }
         }
     }

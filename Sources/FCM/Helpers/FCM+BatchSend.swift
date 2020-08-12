@@ -5,19 +5,19 @@ extension FCM {
     public func batchSend(_ message: FCMMessageDefault, tokens: String...) -> EventLoopFuture<[String]> {
         _send(message, tokens: tokens)
     }
-    
+
     public func batchSend(_ message: FCMMessageDefault, tokens: String..., on eventLoop: EventLoop) -> EventLoopFuture<[String]> {
         _send(message, tokens: tokens).hop(to: eventLoop)
     }
-    
+
     public func batchSend(_ message: FCMMessageDefault, tokens: [String]) -> EventLoopFuture<[String]> {
         _send(message, tokens: tokens)
     }
-    
+
     public func batchSend(_ message: FCMMessageDefault, tokens: [String], on eventLoop: EventLoop) -> EventLoopFuture<[String]> {
         _send(message, tokens: tokens).hop(to: eventLoop)
     }
-    
+
     private func _send(_ message: FCMMessageDefault, tokens: [String]) -> EventLoopFuture<[String]> {
         if message.apns == nil,
             let apnsDefaultConfig = apnsDefaultConfig {
