@@ -22,12 +22,7 @@ extension FCM {
                 let access_token: String
             }
 
-            guard let body = res.body, let data = body.getData(at: body.readerIndex, length: body.readableBytes) else {
-                throw Abort(.notFound, reason: "Data not found")
-            }
-
-            let result = try JSONDecoder().decode(Result.self, from: data)
-            return result.access_token
+            return try res.content.decode(Result.self, using: JSONDecoder()).access_token
         }
     }
 }
