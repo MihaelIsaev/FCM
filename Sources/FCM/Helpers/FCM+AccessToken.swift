@@ -19,10 +19,10 @@ extension FCM {
         .validate()
         .flatMapThrowing { res -> String in
             struct Result: Codable {
-                var access_token: String
+                let access_token: String
             }
-            let result = try res.content.decode(Result.self)
-            return result.access_token
+
+            return try res.content.decode(Result.self, using: JSONDecoder()).access_token
         }
     }
 }
