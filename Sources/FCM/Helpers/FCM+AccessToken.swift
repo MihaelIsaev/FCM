@@ -19,7 +19,7 @@ extension FCM {
         .validate()
         .flatMapThrowing { res -> String in
             struct Result: Codable {
-                var access_token: String
+                let access_token: String
             }
 
             guard let body = res.body, let data = body.getData(at: body.readerIndex, length: body.readableBytes) else {
