@@ -34,7 +34,6 @@ extension FCM {
 
             return self.client.post(URI(string: url), headers: headers) { (req) in
                 struct Payload: Content {
-                    let validate_only: Bool = false
                     let message: FCMMessageDefault
                 }
                 let payload = Payload(message: message)
