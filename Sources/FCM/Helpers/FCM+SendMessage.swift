@@ -43,7 +43,7 @@ extension FCM {
         }
         .validate()
         .flatMapThrowing { res in
-            struct Result: Codable {
+            struct Result: Decodable {
                 let name: String
             }
             let result = try res.content.decode(Result.self)
