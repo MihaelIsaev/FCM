@@ -92,7 +92,7 @@ extension FCM {
         sandbox: Bool = false,
         tokens: [String],
         on eventLoop: EventLoop? = nil) -> EventLoopFuture<[APNSToFirebaseToken]> {
-        let eventLoop = eventLoop ?? application.eventLoopGroup.next()
+        let eventLoop = eventLoop ?? client.eventLoop
         guard tokens.count <= 100 else {
             return eventLoop.makeFailedFuture(Abort(.internalServerError, reason: "FCM: Register APNS: tokens count should be less or equeal 100"))
         }
