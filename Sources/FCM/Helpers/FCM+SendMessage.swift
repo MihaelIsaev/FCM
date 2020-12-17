@@ -34,7 +34,6 @@ extension FCM {
 
             return self.client.post(URI(string: url), headers: headers) { (req) in
                 struct Payload: Content {
-                    let validate_only: Bool = false
                     let message: FCMMessageDefault
                 }
                 let payload = Payload(message: message)
@@ -43,7 +42,7 @@ extension FCM {
         }
         .validate()
         .flatMapThrowing { res in
-            struct Result: Codable {
+            struct Result: Decodable {
                 let name: String
             }
             let result = try res.content.decode(Result.self)

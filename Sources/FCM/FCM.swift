@@ -13,6 +13,7 @@ public struct FCM {
     let audience = "https://www.googleapis.com/oauth2/v4/token"
     let actionsBaseURL = "https://fcm.googleapis.com/v1/projects/"
     let iidURL = "https://iid.googleapis.com/iid/v1:"
+    let batchURL = "https://fcm.googleapis.com/batch"
     
     // MARK: Default configurations
     
@@ -32,13 +33,21 @@ public struct FCM {
     }
     
     // MARK: Initialization
-    
-    public init(application: Application) {
-        self.application = application
+
+    init(application: Application, client: Client) {
         if !application.http.client.configuration.ignoreUncleanSSLShutdown {
             application.http.client.configuration.ignoreUncleanSSLShutdown = true
         }
-        self.client = application.client
+        self.application = application
+        self.client = client
+    }
+
+    public init(application: Application) {
+        self.init(application: application, client: application.client)
+    }
+
+    public init(request: Request) {
+        self.init(application: request.application, client: request.client)
     }
 }
 

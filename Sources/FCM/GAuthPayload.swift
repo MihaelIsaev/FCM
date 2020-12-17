@@ -2,7 +2,7 @@ import JWT
 import Foundation
 
 struct GAuthPayload: JWTPayload {
-    let uid: String = UUID().uuidString
+    let uid: String
     
     var exp: ExpirationClaim
     var iat: IssuedAtClaim
@@ -16,6 +16,7 @@ struct GAuthPayload: JWTPayload {
     }
 
     init(iss: String, sub: String, scope: String, aud: String) {
+        self.uid = UUID().uuidString
         self.exp = GAuthPayload.expirationClaim
         self.iat = IssuedAtClaim(value: Date())
         self.iss = IssuerClaim(value: iss)
@@ -25,6 +26,7 @@ struct GAuthPayload: JWTPayload {
     }
     
     private init(iss: IssuerClaim, sub: SubjectClaim, scope: String, aud: AudienceClaim) {
+        self.uid = UUID().uuidString
         self.exp = GAuthPayload.expirationClaim
         self.iat = IssuedAtClaim(value: Date())
         self.iss = iss
