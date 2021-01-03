@@ -38,6 +38,15 @@ public struct FCMConfiguration {
         self.senderId = s.sender_id ?? Environment.get("FCM_SENDER_ID")
     }
     
+    public init (fromJSON json: String) {
+        let s = Self.parseServiceAccount(from: json)
+        self.email = s.client_email
+        self.projectId = s.project_id
+        self.key = s.private_key
+        self.serverKey = s.server_key ?? Environment.get("FCM_SERVER_KEY")
+        self.senderId = s.sender_id ?? Environment.get("FCM_SENDER_ID")
+    }
+    
     // MARK: Static initializers
     
     /// It will try to read
@@ -60,9 +69,11 @@ public struct FCMConfiguration {
     
     /// It will try to read path to service account key from environment variables
     public static var envServiceAccountKey: FCMConfiguration {
-        guard let path = Environment.get("FCM_SERVICE_ACCOUNT_KEY_PATH")
-            else { fatalError("FCM envServiceAccountKey not set") }
-        return .init(pathToServiceAccountKey: path)
+        if let path = Environment.get("FCM_SERVICE_ACCOUNT_KEY_PATH") {
+            return .init(pathToServiceAccountKey: path)
+        } else if let jsonString = Environment.get("FCM_SERVICE_ACCOUNT_KEY") {
+            return .init(fromJSON: jsonString)
+        } else { fatalError("FCM envServiceAccountKey not set") }
     }
     
     /// It will try to read
@@ -106,6 +117,13 @@ public struct FCMConfiguration {
         }
         guard let serviceAccount = try? JSONDecoder().decode(ServiceAccount.self, from: data) else {
             fatalError("FCM unable to decode serviceAccount from file located at: \(path)")
+        }
+        return serviceAccount
+    }
+    
+    private static func parseServiceAccount(from json: String) -> ServiceAccount {
+        guard let data = json.data(using: .utf8), let serviceAccount = try? JSONDecoder().decode(ServiceAccount.self, from: data) else {
+            fatalError("FCM unable to decode serviceAccount from json string: \(json)")
         }
         return serviceAccount
     }
