@@ -27,14 +27,14 @@ extension FCM {
 
         return getAccessToken().flatMap { accessToken in
             tokens.chunked(into: 500).map { chunk in
-                _sendChunk(
+                self._sendChunk(
                     message,
                     tokens: chunk,
                     urlPath: urlPath,
                     accessToken: accessToken
                 )
             }
-            .flatten(on: client.eventLoop)
+            .flatten(on: self.client.eventLoop)
             .map { $0.flatMap { $0 } }
         }
     }
