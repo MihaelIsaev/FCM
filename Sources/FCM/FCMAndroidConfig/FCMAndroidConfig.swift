@@ -17,25 +17,25 @@ public struct FCMAndroidConfig: Codable, Equatable {
     /// while 3 seconds and 1 nanosecond should be expressed in JSON format as "3.000000001s".
     /// The ttl will be rounded down to the nearest second.
     /// A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".
-    public var ttl: String
+    public var ttl: String?
     
     /// Package name of the application where the registration tokens must match in order to receive the message.
-    public var restricted_package_name: String
+    public var restricted_package_name: String?
     
     /// Arbitrary key/value payload.
     /// If present, it will override FCMMessage.data.
-    public var data: [String: String] = [:]
+    public var data: [String: String]?
     
     /// Notification to send to android devices.
-    public var notification: FCMAndroidNotification
+    public var notification: FCMAndroidNotification?
 
     /// Public Initializer
     public init(collapse_key: String? = nil,
                 priority: FCMAndroidMessagePriority = .normal,
-                ttl: String,
-                restricted_package_name: String,
-                data: [String: String] = [:],
-                notification: FCMAndroidNotification) {
+                ttl: String? = nil,
+                restricted_package_name: String? = nil,
+                data: [String: String]? = nil,
+                notification: FCMAndroidNotification? = nil) {
         self.collapse_key = collapse_key
         self.priority = priority
         self.ttl = ttl
