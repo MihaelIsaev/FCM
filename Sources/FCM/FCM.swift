@@ -35,9 +35,6 @@ public struct FCM {
     // MARK: Initialization
 
     init(application: Application, client: Client) {
-        if !application.http.client.configuration.ignoreUncleanSSLShutdown {
-            application.http.client.configuration.ignoreUncleanSSLShutdown = true
-        }
         self.application = application
         self.client = client
     }
