@@ -35,7 +35,7 @@ Edit your `Package.swift`
 //add this repo to dependencies
 .package(url: "https://github.com/MihaelIsaev/FCM.git", from: "2.7.0")
 //and don't forget about targets
-//.product(name: "FCM", package: "FCM")
+.product(name: "FCM", package: "FCM")
 ```
 
 ### How it works ?
