@@ -100,11 +100,11 @@ extension FCM {
                 return []
             }
             guard let configuration = self.configuration else {
-#if DEBUG
+                #if DEBUG
                 fatalError("FCM not configured. Use app.fcm.configuration = ...")
-#else
+                #else
                 return eventLoop.future([])
-#endif
+                #endif
             }
             guard let serverKey = serverKey ?? configuration.serverKey else {
                 fatalError("FCM: Register APNS: Server Key is missing.")
@@ -114,39 +114,26 @@ extension FCM {
             var headers = HTTPHeaders()
             headers.add(name: .authorization, value: "key=\(serverKey)")
             
-            var res = try await self.client.post(URI(string: url), headers: headers)
-            struct Payload: Content {
-                let application: String
-                let sandbox: Bool
-                let apns_tokens: [String]
+            let response = try await self.client.post(URI(string: url), headers: headers) { req in
+                struct Payload: Content {
+                    let application: String
+                    let sandbox: Bool
+                    let apns_tokens: [String]
+                }
+                let payload = Payload(application: appBundleId, sandbox: sandbox, apns_tokens: tokens)
+                try req.content.encode(payload)
             }
-            let payload = Payload(application: appBundleId, sandbox: sandbox, apns_tokens: tokens)
-            try res.content.encode(payload)
-            
+            try await response.validate()
+
             struct Result: Codable {
                 struct Result: Codable {
                     let registration_token, apns_token, status: String
                 }
                 let results: [Result]
             }
-            let result = try res.content.decode(Result.self)
+            let result = try response.content.decode(Result.self)
             return result.results.map {
                 .init(registration_token: $0.registration_token, apns_token: $0.apns_token, isRegistered: $0.status == "OK")
             }
-            
-            
-//        .validate()
-//        .flatMapThrowing { res in
-//            struct Result: Codable {
-//                struct Result: Codable {
-//                    let registration_token, apns_token, status: String
-//                }
-//                let results: [Result]
-//            }
-//            let result = try res.content.decode(Result.self)
-//            return result.results.map {
-//                .init(registration_token: $0.registration_token, apns_token: $0.apns_token, isRegistered: $0.status == "OK")
-//            }
-//        }
     }
 }

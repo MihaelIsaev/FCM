@@ -33,39 +33,18 @@ extension FCM {
         var headers = HTTPHeaders()
         headers.bearerAuthorization = .init(token: accessToken)
         
-        var response = try await self.client.post(URI(string: url), headers: headers)
-        
-        struct Payload: Content {
-            let message: FCMMessageDefault
+        let response = try await self.client.post(URI(string: url), headers: headers) { req in
+            struct Payload: Content {
+                let message: FCMMessageDefault
+            }
+            let payload = Payload(message: message)
+            try req.content.encode(payload)
         }
-        let payload = Payload(message: message)
-        try response.content.encode(payload)
-        
+            
         struct Result: Decodable {
             let name: String
         }
         let result = try response.content.decode(Result.self)
         return result.name
-        
-//        return getAccessToken().flatMap { accessToken async throws -> ClientResponse in
-//            var headers = HTTPHeaders()
-//            headers.bearerAuthorization = .init(token: accessToken)
-//
-//            return self.client.post(URI(string: url), headers: headers) { (req) in
-//                struct Payload: Content {
-//                    let message: FCMMessageDefault
-//                }
-//                let payload = Payload(message: message)
-//                try req.content.encode(payload)
-//            }
-//        }
-//        .validate()
-//        .flatMapThrowing { res in
-//            struct Result: Decodable {
-//                let name: String
-//            }
-//            let result = try res.content.decode(Result.self)
-//            return result.name
-//        }
     }
 }
