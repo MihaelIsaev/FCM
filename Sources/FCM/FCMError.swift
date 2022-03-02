@@ -42,18 +42,14 @@ public struct FCMError: Error, Decodable {
     }
 }
 
-extension EventLoopFuture where Value == ClientResponse {
-    func validate() -> EventLoopFuture<ClientResponse> {
-        return flatMapThrowing { (response) in
-            guard 200 ..< 300 ~= response.status.code else {
-                if let error = try? response.content.decode(GoogleError.self) {
-                    throw error
-                }
-                let body = response.body.map(String.init) ?? ""
-                throw Abort(.internalServerError, reason: "FCM: Unexpected error '\(body)'")
+extension ClientResponse{
+    func validate() async throws {
+        guard 200 ..< 300 ~= self.status.code else {
+            if let error = try? self.content.decode(GoogleError.self) {
+                throw error
             }
-
-            return response
+            let body = self.body.map(String.init) ?? ""
+            throw Abort(.internalServerError, reason: "FCM: Unexpected error '\(body)'")
         }
     }
 }
