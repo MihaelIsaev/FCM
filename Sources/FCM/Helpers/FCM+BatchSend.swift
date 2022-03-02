@@ -42,6 +42,9 @@ extension FCM {
         urlPath: String,
         accessToken: String
     ) async throws -> [String] {
+        guard let configuration = self.configuration else {
+            fatalError("FCM not configured. Use app.fcm.configuration = ...")
+        }
         let boundary = "subrequest_boundary"
         var body = ByteBufferAllocator().buffer(capacity: 0)
 
@@ -117,7 +120,7 @@ extension FCM {
             if let data = body.readData(length: body.readableBytes) {
                 let str = String(decoding: data, as: UTF8.self)
                 var trimmedString = str.components(separatedBy: .whitespacesAndNewlines).joined()
-                let projectPath = "projects/\(configuration?.projectId ?? "")/messages/"
+                let projectPath = "projects/\(configuration.projectId)/messages/"
                 if trimmedString.contains(projectPath) {
                     if !trimmedString.contains("{") {
                         trimmedString.insert("{", at: trimmedString.startIndex)
