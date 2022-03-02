@@ -43,12 +43,10 @@ extension FCM {
         accessToken: String
     ) async throws -> [String] {
         let boundary = "subrequest_boundary"
+        var body = ByteBufferAllocator().buffer(capacity: 0)
 
         var headers = HTTPHeaders()
         headers.contentType = .init(type: "multipart", subType: "mixed", parameters: ["boundary": boundary])
-        headers.bearerAuthorization = .init(token: accessToken)
-        
-        var body = ByteBufferAllocator().buffer(capacity: 0)
         
         struct Payload: Encodable {
             let message: FCMMessageDefault
@@ -75,7 +73,8 @@ extension FCM {
                     apns: message.apns ?? apnsDefaultConfig
                 )
                 
-                try partBody.writeJSONEncodable(Payload(message: message))
+                let payload = Payload(message: message)
+                try partBody.writeJSONEncodable(payload)
                 
                 return MultipartPart(headers: [
                     "Content-Type": "application/http",
