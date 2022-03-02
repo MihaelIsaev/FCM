@@ -26,9 +26,11 @@ extension FCM {
         
         let urlPath = URI(string: actionsBaseURL + configuration.projectId + "/messages:send").path
         let accessToken = try await getAccessToken()
+        let chunked = tokens.chunked(into: 500).joined()
+        
         return try await self._sendChunk(
             message,
-            tokens: tokens,
+            tokens: Array(chunked),
             urlPath: urlPath,
             accessToken: accessToken
         )
@@ -40,8 +42,13 @@ extension FCM {
         urlPath: String,
         accessToken: String
     ) async throws -> [String] {
-        var body = ByteBufferAllocator().buffer(capacity: 0)
         let boundary = "subrequest_boundary"
+
+        var headers = HTTPHeaders()
+        headers.contentType = .init(type: "multipart", subType: "mixed", parameters: ["boundary": boundary])
+        headers.bearerAuthorization = .init(token: accessToken)
+        
+        var body = ByteBufferAllocator().buffer(capacity: 0)
         
         struct Payload: Encodable {
             let message: FCMMessageDefault
@@ -70,7 +77,11 @@ extension FCM {
                 
                 try partBody.writeJSONEncodable(Payload(message: message))
                 
-                return MultipartPart(headers: ["Content-Type": "application/json"], body: partBody)
+                return MultipartPart(headers: [
+                    "Content-Type": "application/http",
+                    "Content-Transfer-Encoding": "binary",
+                    "Authorization": "Bearer \(accessToken)"
+                ], body: partBody)
             }
             
             try MultipartSerializer().serialize(parts: parts, boundary: boundary, into: &body)
@@ -78,12 +89,9 @@ extension FCM {
             throw Abort(.internalServerError, reason: error.localizedDescription)
         }
         
-        var headers = HTTPHeaders()
-        headers.contentType = .init(type: "multipart", subType: "mixed", parameters: ["boundary": boundary])
-        headers.bearerAuthorization = .init(token: accessToken)
-        
-        let response = try await self.client.post(URI(string: batchURL), headers: headers) { req in
+        let response = try await self.client.post(URI(string: self.batchURL), headers: headers) { req in
             req.body = body
+            print("REQUEST BODY", String(buffer: body))
         }
         try await response.validate()
         
@@ -92,13 +100,13 @@ extension FCM {
         else {
             throw Abort(.internalServerError, reason: "FCM: Missing \"boundary\" in batch response headers")
         }
-        print("boundary", boundary)
+        print("RESPONSE BOUNDARY", boundary)
         guard
             let body = response.body
         else {
             throw Abort(.internalServerError, reason: "FCM: Missing response body from batch operation")
         }
-        print("body", String(buffer: body))
+        print("RESPONSE BODY", String(buffer: body))
 
         struct Result: Decodable {
             let name: String
