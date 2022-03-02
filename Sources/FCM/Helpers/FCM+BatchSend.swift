@@ -61,6 +61,7 @@ extension FCM {
                     Content-Type: application/json\r
                     accept: application/json\r
                     \r
+
                     """)
                 
                 let message = FCMMessageDefault(
@@ -90,7 +91,6 @@ extension FCM {
         
         let response = try await self.client.post(URI(string: self.batchURL), headers: headers) { req in
             req.body = body
-            print("REQUEST BODY", String(buffer: body))
         }
         try await response.validate()
         
@@ -99,13 +99,11 @@ extension FCM {
         else {
             throw Abort(.internalServerError, reason: "FCM: Missing \"boundary\" in batch response headers")
         }
-        print("RESPONSE BOUNDARY", boundary)
         guard
             let body = response.body
         else {
             throw Abort(.internalServerError, reason: "FCM: Missing response body from batch operation")
         }
-        print("RESPONSE BODY", String(buffer: body))
 
         struct Result: Decodable {
             let name: String
@@ -113,20 +111,31 @@ extension FCM {
         
         let jsonDecoder = JSONDecoder()
         var result: [String] = []
-
+        
         let parser = MultipartParser(boundary: boundary)
         parser.onBody = { body in
-            let bytes = body.readableBytesView
-            if let indexOfBodyStart = bytes.firstIndex(of: 0x7B) /* '{' */ {
-                body.moveReaderIndex(to: indexOfBodyStart)
-                if let name = try? jsonDecoder.decode(Result.self, from: body).name {
-                    result.append(name)
+            if let data = body.readData(length: body.readableBytes) {
+                let str = String(decoding: data, as: UTF8.self)
+                var trimmedString = str.components(separatedBy: .whitespacesAndNewlines).joined()
+                let projectPath = "projects/\(configuration?.projectId ?? "")/messages/"
+                if trimmedString.contains(projectPath) {
+                    if !trimmedString.contains("{") {
+                        trimmedString.insert("{", at: trimmedString.startIndex)
+                    }
+                    if !trimmedString.contains("}") {
+                        trimmedString.insert("}", at: trimmedString.endIndex)
+                    }
+                    print(trimmedString)
+                    
+                    if let data = trimmedString.data(using: .utf8) {
+                        if let name = try? jsonDecoder.decode(Result.self, from: data).name {
+                            result.append(name)
+                        }
+                    }
                 }
             }
         }
-
         try parser.execute(body)
-        
         return result
     }
 }
@@ -136,5 +145,55 @@ private extension Collection where Index == Int {
         stride(from: 0, to: count, by: size).map {
             Array(self[$0 ..< Swift.min($0 + size, count)])
         }
+    }
+}
+
+private class MultipartParserOutputReceiver {
+    var parts: [MultipartPart] = []
+    var headers: HTTPHeaders = [:]
+    var body: ByteBuffer = ByteBuffer()
+
+    static func collectOutput(_ data: String, boundary: String) throws -> MultipartParserOutputReceiver {
+        try collectOutput(ByteBuffer(string: data), boundary: boundary)
+    }
+
+    static func collectOutput(_ data: ByteBuffer, boundary: String) throws -> MultipartParserOutputReceiver {
+        let output = MultipartParserOutputReceiver()
+        let parser = MultipartParser(boundary: boundary)
+        output.setUp(with: parser)
+        try parser.execute(data)
+        return output
+    }
+
+    func setUp(with parser: MultipartParser) {
+        parser.onHeader = { (field, value) in
+            self.headers.replaceOrAdd(name: field, value: value)
+        }
+        parser.onBody = { new in
+            self.body.writeBuffer(&new)
+        }
+        parser.onPartComplete = {
+            let part = MultipartPart(headers: self.headers, body: self.body)
+            self.headers = [:]
+            self.body = ByteBuffer()
+            self.parts.append(part)
+        }
+    }
+}
+private extension Collection {
+    func chunked(by maxLength: Int) -> [SubSequence] {
+        precondition(maxLength > 0, "groups must be greater than zero")
+        var start = startIndex
+        return stride(from: 0, to: count, by: maxLength).map { _ in
+            let end = index(start, offsetBy: maxLength, limitedBy: endIndex) ?? endIndex
+            defer { start = end }
+            return self[start..<end]
+        }
+    }
+}
+
+extension ByteBuffer {
+    var string: String {
+        String(buffer: self)
     }
 }
