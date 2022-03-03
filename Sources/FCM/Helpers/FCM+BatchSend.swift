@@ -26,14 +26,18 @@ extension FCM {
         
         let urlPath = URI(string: actionsBaseURL + configuration.projectId + "/messages:send").path
         let accessToken = try await getAccessToken()
-        let chunked = tokens.chunked(into: 500).joined()
+        var response: [String] = []
+        for chunked in tokens.chunked(into: 500) {
+            let tokens = try await self._sendChunk(
+                message,
+                tokens: chunked,
+                urlPath: urlPath,
+                accessToken: accessToken
+            )
+            response.append(contentsOf: tokens)
+        }
         
-        return try await self._sendChunk(
-            message,
-            tokens: Array(chunked),
-            urlPath: urlPath,
-            accessToken: accessToken
-        )
+        return response
     }
     
     private func _sendChunk(
