@@ -2,23 +2,26 @@ import Foundation
 import Vapor
 
 extension FCM {
-    public func batchSend(_ message: FCMMessageDefault, tokens: String...) -> EventLoopFuture<[String]> {
+
+    public typealias BatchResult = Result<String, Error>
+
+    public func batchSend(_ message: FCMMessageDefault, tokens: String...) -> EventLoopFuture<[BatchResult]> {
         _send(message, tokens: tokens)
     }
 
-    public func batchSend(_ message: FCMMessageDefault, tokens: String..., on eventLoop: EventLoop) -> EventLoopFuture<[String]> {
+    public func batchSend(_ message: FCMMessageDefault, tokens: String..., on eventLoop: EventLoop) -> EventLoopFuture<[BatchResult]> {
         _send(message, tokens: tokens).hop(to: eventLoop)
     }
 
-    public func batchSend(_ message: FCMMessageDefault, tokens: [String]) -> EventLoopFuture<[String]> {
+    public func batchSend(_ message: FCMMessageDefault, tokens: [String]) -> EventLoopFuture<[BatchResult]> {
         _send(message, tokens: tokens)
     }
 
-    public func batchSend(_ message: FCMMessageDefault, tokens: [String], on eventLoop: EventLoop) -> EventLoopFuture<[String]> {
+    public func batchSend(_ message: FCMMessageDefault, tokens: [String], on eventLoop: EventLoop) -> EventLoopFuture<[BatchResult]> {
         _send(message, tokens: tokens).hop(to: eventLoop)
     }
 
-    private func _send(_ message: FCMMessageDefault, tokens: [String]) -> EventLoopFuture<[String]> {
+    private func _send(_ message: FCMMessageDefault, tokens: [String]) -> EventLoopFuture<[BatchResult]> {
         guard let configuration = self.configuration else {
             fatalError("FCM not configured. Use app.fcm.configuration = ...")
         }
@@ -44,7 +47,7 @@ extension FCM {
         tokens: [String],
         urlPath: String,
         accessToken: String
-    ) -> EventLoopFuture<[String]> {
+    ) -> EventLoopFuture<[BatchResult]> {
         var body = ByteBufferAllocator().buffer(capacity: 0)
         let boundary = "subrequest_boundary"
 
@@ -110,23 +113,59 @@ extension FCM {
                 }
 
                 let jsonDecoder = JSONDecoder()
-                var result: [String] = []
+                var results: [BatchResult] = []
 
                 let parser = MultipartParser(boundary: boundary)
-                parser.onBody = { body in
-                    let bytes = body.readableBytesView
+
+                var partBody: ByteBuffer = ByteBuffer()
+                parser.onBody = { new in
+                    partBody.writeBuffer(&new)
+                }
+                parser.onPartComplete = {
+                    defer {
+                        partBody = ByteBuffer()
+                    }
+
+                    let bytes = partBody.readableBytesView
                     if let indexOfBodyStart = bytes.firstIndex(of: 0x7B) /* '{' */ {
-                        body.moveReaderIndex(to: indexOfBodyStart)
-                        if let name = try? jsonDecoder.decode(Result.self, from: body).name {
-                            result.append(name)
+                        partBody.moveReaderIndex(to: indexOfBodyStart)
+                        if let name = try? jsonDecoder.decode(Result.self, from: partBody).name {
+                            results.append(.success(name))
+                        } else if let error = try? jsonDecoder.decode(GoogleError.self, from: partBody) {
+                            results.append(.failure(error))
+                        } else {
+                            results.append(.failure(FCMError(errorCode: .unspecified)))
                         }
                     }
                 }
 
                 try parser.execute(body)
 
-                return result
+                return results
             }
+    }
+}
+
+extension FCM {
+
+    @available(*, unavailable, message: "Use function that returns `EventLoopFuture<[BatchResult]>`")
+    public func batchSend(_ message: FCMMessageDefault, tokens: String...) -> EventLoopFuture<[String]> {
+        fatalError()
+    }
+
+    @available(*, unavailable, message: "Use function that returns `EventLoopFuture<[BatchResult]>`")
+    public func batchSend(_ message: FCMMessageDefault, tokens: String..., on eventLoop: EventLoop) -> EventLoopFuture<[String]> {
+        fatalError()
+    }
+
+    @available(*, unavailable, message: "Use function that returns `EventLoopFuture<[BatchResult]>`")
+    public func batchSend(_ message: FCMMessageDefault, tokens: [String]) -> EventLoopFuture<[String]> {
+        fatalError()
+    }
+
+    @available(*, unavailable, message: "Use function that returns `EventLoopFuture<[BatchResult]>`")
+    public func batchSend(_ message: FCMMessageDefault, tokens: [String], on eventLoop: EventLoop) -> EventLoopFuture<[String]> {
+        fatalError()
     }
 }
 
