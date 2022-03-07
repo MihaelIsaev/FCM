@@ -107,13 +107,12 @@ Here's an example route handler with push notification sending using token
 import FCM
 
 func routes(_ app: Application) throws {
-    app.get("testfcm") { req -> EventLoopFuture<String> in
+    app.get("testfcm") { req -> String in
         let token = "<YOUR FIREBASE DEVICE TOKEN>" // get it from iOS/Android SDK
-        let notification = FCMNotification(title: "Vapor is awesome!", body: "Swift one love! ❤️")
+        let notification = FCMNotification(title: "Vapor is awesome!", body: "Swift one love!")
         let message = FCMMessage(token: token, notification: notification)
-        return req.fcm.send(message, on: req.eventLoop).map { name in
-            return "Just sent: \(name)"
-        }
+        let response = try await req.fcm.send(message)
+        return response
     }
 }
 ```
@@ -143,9 +142,7 @@ let token100500 = "<YOUR FIREBASE DEVICE TOKEN>"
 
 let notification = FCMNotification(title: "Life is great! 😃", body: "Swift one love! ❤️")
 let message = FCMMessage(notification: notification)
-application.fcm.batchSend(message, tokens: [token1, token2, token3, ..., token100500]).map {
-    print("sent!")
-}
+try await application.fcm.batchSend(message, tokens: [token1, token2, token3, ..., token100500])
 ```
 
 # APNS to Firebase token conversion
@@ -190,10 +187,7 @@ application.fcm.registerAPNS(
     serverKey: String?, // optional server key, if nil then env variable will be used
     sandbox: Bool, // optional sandbox key, false by default
     tokens: [String], // an array of APNS tokens
-    on: EventLoop? // optional event loop, if nil then application.eventLoopGroup.next() will be used
-).flatMap { tokens in
-    /// the same as in above example
-}
+)
 ```
 
 > 💡 Please note that push token taken from Xcode while debugging is for `sandbox`, so either use `.envSandbox` or don't forget to set `sandbox: true`

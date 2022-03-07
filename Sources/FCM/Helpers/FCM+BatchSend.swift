@@ -7,15 +7,7 @@ extension FCM {
         try await _send(message, tokens: tokens)
     }
     
-    public func batchSend(_ message: FCMMessageDefault, tokens: String..., on eventLoop: EventLoop) async throws -> [String] {
-        try await _send(message, tokens: tokens)
-    }
-    
     public func batchSend(_ message: FCMMessageDefault, tokens: [String]) async throws -> [String]{
-        try await _send(message, tokens: tokens)
-    }
-    
-    public func batchSend(_ message: FCMMessageDefault, tokens: [String], on eventLoop: EventLoop) async throws -> [String] {
         try await _send(message, tokens: tokens)
     }
     

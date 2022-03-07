@@ -6,15 +6,7 @@ extension FCM {
         try await deleteTopic(name, tokens: tokens)
     }
 
-    public func deleteTopic(_ name: String, tokens: String..., on eventLoop: EventLoop) async throws {
-        try await deleteTopic(name, tokens: tokens)
-    }
-
     public func deleteTopic(_ name: String, tokens: [String]) async throws {
-        try await _deleteTopic(name, tokens: tokens)
-    }
-
-    public func deleteTopic(_ name: String, tokens: [String], on eventLoop: EventLoop) async throws {
         try await _deleteTopic(name, tokens: tokens)
     }
 

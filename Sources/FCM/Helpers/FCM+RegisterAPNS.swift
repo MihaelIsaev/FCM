@@ -49,9 +49,8 @@ extension FCM {
     ///
     public func registerAPNS(
         _ id: RegisterAPNSID,
-        tokens: String...,
-        on eventLoop: EventLoop? = nil) async throws -> [APNSToFirebaseToken] {
-            try await registerAPNS(appBundleId: id.appBundleId, serverKey: id.serverKey, sandbox: id.sandbox, tokens: tokens, on: eventLoop)
+        tokens: String...) async throws -> [APNSToFirebaseToken] {
+            try await registerAPNS(appBundleId: id.appBundleId, serverKey: id.serverKey, sandbox: id.sandbox, tokens: tokens)
     }
 
     /// Helper method which registers your pure APNS token in Firebase Cloud Messaging
@@ -68,9 +67,8 @@ extension FCM {
     ///
     public func registerAPNS(
         _ id: RegisterAPNSID,
-        tokens: [String],
-        on eventLoop: EventLoop? = nil) async throws -> [APNSToFirebaseToken] {
-            try await registerAPNS(appBundleId: id.appBundleId, serverKey: id.serverKey, sandbox: id.sandbox, tokens: tokens, on: eventLoop)
+        tokens: [String]) async throws -> [APNSToFirebaseToken] {
+            try await registerAPNS(appBundleId: id.appBundleId, serverKey: id.serverKey, sandbox: id.sandbox, tokens: tokens)
     }
 
     /// Helper method which registers your pure APNS token in Firebase Cloud Messaging
@@ -79,9 +77,8 @@ extension FCM {
         appBundleId: String,
         serverKey: String? = nil,
         sandbox: Bool = false,
-        tokens: String...,
-        on eventLoop: EventLoop? = nil) async throws -> [APNSToFirebaseToken] {
-            try await registerAPNS(appBundleId: appBundleId, serverKey: serverKey, sandbox: sandbox, tokens: tokens, on: eventLoop)
+        tokens: String...) async throws -> [APNSToFirebaseToken] {
+            try await registerAPNS(appBundleId: appBundleId, serverKey: serverKey, sandbox: sandbox, tokens: tokens)
     }
 
     /// Helper method which registers your pure APNS token in Firebase Cloud Messaging
@@ -90,9 +87,7 @@ extension FCM {
         appBundleId: String,
         serverKey: String? = nil,
         sandbox: Bool = false,
-        tokens: [String],
-        on eventLoop: EventLoop? = nil) async throws -> [APNSToFirebaseToken] {
-            let eventLoop = eventLoop ?? client.eventLoop
+        tokens: [String]) async throws -> [APNSToFirebaseToken] {
             guard tokens.count <= 100 else {
                 throw Abort(.internalServerError, reason: "FCM: Register APNS: tokens count should be less or equeal 100")
             }
@@ -103,7 +98,7 @@ extension FCM {
                 #if DEBUG
                 fatalError("FCM not configured. Use app.fcm.configuration = ...")
                 #else
-                return eventLoop.future([])
+                return []
                 #endif
             }
             guard let serverKey = serverKey ?? configuration.serverKey else {

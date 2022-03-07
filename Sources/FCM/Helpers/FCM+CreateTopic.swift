@@ -6,15 +6,7 @@ extension FCM {
         try await createTopic(name, tokens: tokens)
     }
 
-    public func createTopic(_ name: String? = nil, tokens: String..., on eventLoop: EventLoop) async throws -> String {
-        try await createTopic(name, tokens: tokens)
-    }
-
     public func createTopic(_ name: String? = nil, tokens: [String]) async throws -> String {
-        try await _createTopic(name, tokens: tokens)
-    }
-
-    public func createTopic(_ name: String? = nil, tokens: [String], on eventLoop: EventLoop) async throws -> String {
         try await _createTopic(name, tokens: tokens)
     }
 
