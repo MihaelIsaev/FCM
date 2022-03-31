@@ -43,6 +43,9 @@ public struct FCMApnsApsObject: Codable, Equatable {
     /// If the value is 1, the system passes the notification to your notification service app extension before delivery.
     /// Use your extension to modify the notification’s content.
     public var mutableContent: Int?
+    
+    public var clickAction: String?
+
 
     public enum Priority: String {
         case normal
@@ -58,6 +61,7 @@ public struct FCMApnsApsObject: Codable, Equatable {
         case category
         case threadId="thread-id"
         case mutableContent="mutable-content"
+        case clickAction="click-action"
     }
 
     struct Config {
@@ -69,6 +73,7 @@ public struct FCMApnsApsObject: Codable, Equatable {
         var category: String?
         var threadId: String?
         var mutableContent: Bool?
+        var clickAction: String?
     }
 
     init(config: Config?) {
@@ -89,6 +94,7 @@ public struct FCMApnsApsObject: Codable, Equatable {
         if let value = config?.mutableContent, value {
             mutableContent = 1
         }
+        clickAction = config?.clickAction
     }
     
     public static var `default`: FCMApnsApsObject {
@@ -102,7 +108,8 @@ public struct FCMApnsApsObject: Codable, Equatable {
                 contentAvailable: Bool? = nil,
                 category: String? = nil,
                 threadId: String? = nil,
-                mutableContent: Bool? = nil) {
+                mutableContent: Bool? = nil,
+                clickAction: String? = nil) {
         self.init(config: Config(alert: FCMApnsAlertOrString.fromRaw(alertString),
                                  badge: badge,
                                  sound: sound,
@@ -110,7 +117,8 @@ public struct FCMApnsApsObject: Codable, Equatable {
                                  contentAvailable: contentAvailable,
                                  category: category,
                                  threadId: threadId,
-                                 mutableContent: mutableContent))
+                                 mutableContent: mutableContent,
+                                 clickAction: clickAction))
     }
     
     public init(alert: FCMApnsAlert? = nil,
@@ -120,7 +128,8 @@ public struct FCMApnsApsObject: Codable, Equatable {
                 contentAvailable: Bool? = nil,
                 category: String? = nil,
                 threadId: String? = nil,
-                mutableContent: Bool? = nil) {
+                mutableContent: Bool? = nil,
+                clickAction: String? = nil) {
         self.init(config: Config(alert: FCMApnsAlertOrString.fromRaw(alert),
                                  badge: badge,
                                  sound: sound,
@@ -128,7 +137,8 @@ public struct FCMApnsApsObject: Codable, Equatable {
                                  contentAvailable: contentAvailable,
                                  category: category,
                                  threadId: threadId,
-                                 mutableContent: mutableContent))
+                                 mutableContent: mutableContent,
+                                 clickAction: clickAction))
     }
 }
 
