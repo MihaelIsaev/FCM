@@ -19,18 +19,16 @@ extension FCM {
     }
 
     private func _deleteTopic(_ name: String, tokens: [String]) -> EventLoopFuture<Void> {
-        guard let configuration = self.configuration else {
-            fatalError("FCM not configured. Use app.fcm.configuration = ...")
-        }
         guard let serverKey = configuration.serverKey else {
             fatalError("FCM: DeleteTopic: Server Key is missing.")
         }
-        let url = self.iidURL + "batchRemove"
-        return getAccessToken().flatMap { accessToken -> EventLoopFuture<ClientResponse> in
+
+        let url = iidURL + "batchRemove"
+        return getAccessToken().flatMap { _ -> EventLoopFuture<ClientResponse> in
             var headers = HTTPHeaders()
             headers.add(name: .authorization, value: "key=\(serverKey)")
 
-            return self.client.post(URI(string: url), headers: headers) { (req) in
+            return self.client.post(URI(string: url), headers: headers) { req in
                 struct Payload: Content {
                     let to: String
                     let registration_tokens: [String]

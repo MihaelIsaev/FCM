@@ -19,9 +19,6 @@ extension FCM {
     }
 
     private func _createTopic(_ name: String? = nil, tokens: [String]) -> EventLoopFuture<String> {
-        guard let configuration = self.configuration else {
-            fatalError("FCM not configured. Use app.fcm.configuration = ...")
-        }
         guard let serverKey = configuration.serverKey else {
             fatalError("FCM: CreateTopic: Server Key is missing.")
         }
