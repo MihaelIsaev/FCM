@@ -34,6 +34,10 @@ extension FCM {
         public func client(_ id: FCM.ID) -> FCM {
             container.client(id)
         }
+        
+        public func use(_ id: FCM.ID, configuration: FCMConfiguration) throws {
+            try container.use(id, configuration: configuration)
+        }
     }
 }
 
