@@ -13,7 +13,7 @@ extension FCM {
     public struct Storage {
         private let application: Application
 
-        var container: FCMClientContainer {
+        public var container: FCMClientContainer {
             guard let existingContainer = application.storage[ContainerKey.self] else {
                 let lock = application.locks.lock(for: ContainerKey.self)
                 lock.lock()

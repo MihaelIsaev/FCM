@@ -10,7 +10,7 @@ import NIOConcurrencyHelpers
 import Vapor
 
 
-class FCMClientContainer {
+public class FCMClientContainer {
     private let application: Application
     private var clients: [FCM.ID: FCM]
     private let lock: NIOLock
@@ -21,7 +21,7 @@ class FCMClientContainer {
         lock = .init()
     }
 
-    func client(_ id: FCM.ID) -> FCM {
+    public func client(_ id: FCM.ID) -> FCM {
         guard let client = clients[id] else {
             fatalError("No clients configured for \(id)")
         }
@@ -29,7 +29,7 @@ class FCMClientContainer {
         return client
     }
 
-    func use(_ id: FCM.ID, configuration: FCMConfiguration) throws {
+    public func use(_ id: FCM.ID, configuration: FCMConfiguration) throws {
         lock.lock()
         defer { lock.unlock() }
 
