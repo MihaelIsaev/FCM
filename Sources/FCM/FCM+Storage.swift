@@ -31,7 +31,7 @@ extension FCM {
             self.application = application
         }
 
-        func client(_ id: FCM.ID) -> FCM {
+        public func client(_ id: FCM.ID) -> FCM {
             container.client(id)
         }
     }
