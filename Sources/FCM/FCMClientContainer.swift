@@ -33,7 +33,7 @@ class FCMClientContainer {
         lock.lock()
         defer { lock.unlock() }
 
-        guard !clients.contains(where: { $0.key == id }) else {
+        guard !clients.keys.contains(id) else {
             fatalError("Cannot change fcm client config of \(id) while running.")
         }
 
@@ -41,6 +41,7 @@ class FCMClientContainer {
             client: application.client,
             configuration: configuration
         )
+        
         clients[id] = client
     }
 }

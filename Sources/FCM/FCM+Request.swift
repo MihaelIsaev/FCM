@@ -6,7 +6,6 @@ extension Request {
     }
 
     public func fcm(_ id: FCM.ID) -> FCM {
-        FCM.Storage(application: application)
-            .client(id)
+        application.fcm.client(id)
     }
 }
