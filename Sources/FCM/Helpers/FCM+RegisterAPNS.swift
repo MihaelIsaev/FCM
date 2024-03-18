@@ -99,13 +99,7 @@ extension FCM {
         guard tokens.count > 0 else {
             return eventLoop.future([])
         }
-        guard let configuration = self.configuration else {
-            #if DEBUG
-            fatalError("FCM not configured. Use app.fcm.configuration = ...")
-            #else
-            return eventLoop.future([])
-            #endif
-        }
+        
         guard let serverKey = serverKey ?? configuration.serverKey else {
             fatalError("FCM: Register APNS: Server Key is missing.")
         }

@@ -11,9 +11,6 @@ extension FCM {
     }
     
     private func _send(_ message: FCMMessageDefault) -> EventLoopFuture<String> {
-        guard let configuration = self.configuration else {
-            fatalError("FCM not configured. Use app.fcm.configuration = ...")
-        }
         if message.apns == nil,
             let apnsDefaultConfig = apnsDefaultConfig {
             message.apns = apnsDefaultConfig
