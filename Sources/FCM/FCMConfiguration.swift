@@ -87,7 +87,7 @@ extension FCMConfiguration {
     /// - FCM_SERVER_KEY
     /// - FCM_SENDER_ID
     /// credentials from environment variables based on instance
-    public static func envCredentials(for id: FCM.ID = .default) -> FCMConfiguration {
+    public static func envCredentials(for id: FCM.ID) -> FCMConfiguration {
         guard
             let email = EnvironmentKeys.email.lookup(for: id),
             let projectId = EnvironmentKeys.projectId.lookup(for: id),
@@ -100,14 +100,22 @@ extension FCMConfiguration {
         let senderId = EnvironmentKeys.senderId.lookup(for: id)
         return .init(email: email, projectId: projectId, keyPath: keyPath, serverKey: serverKey, senderId: senderId)
     }
+    
+    public static var envCredentials: FCMConfiguration {
+        envCredentials(for: .default)
+    }
 
     /// It will try to read path to service account key from environment variables
-    public static func envServiceAccountKey(for id: FCM.ID = .default) -> FCMConfiguration {
+    public static func envServiceAccountKey(for id: FCM.ID) -> FCMConfiguration {
         if let path = EnvironmentKeys.serviceAccountKeyPath.lookup(for: id) {
             return .init(pathToServiceAccountKey: path)
         } else if let jsonString = EnvironmentKeys.serviceAccountKey.lookup(for: id) {
             return .init(fromJSON: jsonString)
         } else { fatalError("FCM envServiceAccountKey not set") }
+    }
+    
+    public static var envServiceAccountKey: FCMConfiguration {
+        envServiceAccountKey(for: .default)
     }
 
     /// It will try to read
@@ -115,7 +123,7 @@ extension FCMConfiguration {
     /// - FCM_PROJECT_ID - project_id
     /// - FCM_PRIVATE_KEY - private_key
     /// credentials from environment variables based on instance
-    public static func envServiceAccountKeyFields(for id: FCM.ID = .default) -> FCMConfiguration {
+    public static func envServiceAccountKeyFields(for id: FCM.ID) -> FCMConfiguration {
         guard
             let email = EnvironmentKeys.email.lookup(for: id),
             let projectId = EnvironmentKeys.projectId.lookup(for: id),
@@ -131,6 +139,10 @@ extension FCMConfiguration {
             serverKey: nil,
             senderId: nil
         )
+    }
+    
+    public static var envServiceAccountKeyFields: FCMConfiguration {
+        envServiceAccountKeyFields(for: .default)
     }
 
     // MARK: Helpers
