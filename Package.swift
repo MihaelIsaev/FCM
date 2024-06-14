@@ -1,4 +1,4 @@
-// swift-tools-version:5.2
+// swift-tools-version:5.10
 
 import PackageDescription
 
@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
         // 💧 A server-side Swift web framework.
-        .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.100.0"),
         .package(url: "https://github.com/vapor/jwt.git", from: "4.0.0"),
     ],
     targets: [
