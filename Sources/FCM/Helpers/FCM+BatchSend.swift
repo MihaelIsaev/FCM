@@ -2,18 +2,22 @@ import Foundation
 import Vapor
 
 extension FCM {
+    @available(*, deprecated, message: "🧨 Requests to the endpoint will start failing after 6/21/2024. Migrate to the standard send method.")
     public func batchSend(_ message: FCMMessageDefault, tokens: String...) -> EventLoopFuture<[String]> {
         _send(message, tokens: tokens)
     }
 
+    @available(*, deprecated, message: "🧨 Requests to the endpoint will start failing after 6/21/2024. Migrate to the standard send method.")
     public func batchSend(_ message: FCMMessageDefault, tokens: String..., on eventLoop: EventLoop) -> EventLoopFuture<[String]> {
         _send(message, tokens: tokens).hop(to: eventLoop)
     }
 
+    @available(*, deprecated, message: "🧨 Requests to the endpoint will start failing after 6/21/2024. Migrate to the standard send method.")
     public func batchSend(_ message: FCMMessageDefault, tokens: [String]) -> EventLoopFuture<[String]> {
         _send(message, tokens: tokens)
     }
 
+    @available(*, deprecated, message: "🧨 Requests to the endpoint will start failing after 6/21/2024. Migrate to the standard send method.")
     public func batchSend(_ message: FCMMessageDefault, tokens: [String], on eventLoop: EventLoop) -> EventLoopFuture<[String]> {
         _send(message, tokens: tokens).hop(to: eventLoop)
     }
