@@ -23,10 +23,6 @@ extension FCM {
     }
 
     private func _send(_ message: FCMMessageDefault, tokens: [String]) -> EventLoopFuture<[String]> {
-        guard let configuration = self.configuration else {
-            fatalError("FCM not configured. Use app.fcm.configuration = ...")
-        }
-
         let urlPath = URI(string: actionsBaseURL + configuration.projectId + "/messages:send").path
 
         return getAccessToken().flatMap { accessToken in
@@ -61,12 +57,12 @@ extension FCM {
                 var partBody = ByteBufferAllocator().buffer(capacity: 0)
 
                 partBody.writeString("""
-                    POST \(urlPath)\r
-                    Content-Type: application/json\r
-                    accept: application/json\r
-                    \r
+                POST \(urlPath)\r
+                Content-Type: application/json\r
+                accept: application/json\r
+                \r
 
-                    """)
+                """)
 
                 let message = FCMMessageDefault(
                     token: token,
@@ -92,7 +88,7 @@ extension FCM {
         headers.contentType = .init(type: "multipart", subType: "mixed", parameters: ["boundary": boundary])
         headers.bearerAuthorization = .init(token: accessToken)
 
-        return self.client
+        return client
             .post(URI(string: batchURL), headers: headers) { req in
                 req.body = body
             }
