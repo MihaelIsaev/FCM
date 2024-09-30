@@ -35,7 +35,7 @@ struct GAuthPayload: JWTPayload {
         self.aud = aud
     }
 
-    func verify(using signer: JWTSigner) throws {
+    func verify(using algorithm: some JWTAlgorithm) throws {
         // not used
     }
 

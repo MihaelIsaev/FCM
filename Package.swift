@@ -1,11 +1,11 @@
-// swift-tools-version:5.2
+// swift-tools-version:6.0
 
 import PackageDescription
 
 let package = Package(
     name: "FCM",
     platforms: [
-       .macOS(.v10_15)
+       .macOS(.v13)
     ],
     products: [
         //Vapor client for Firebase Cloud Messaging
@@ -14,7 +14,7 @@ let package = Package(
     dependencies: [
         // 💧 A server-side Swift web framework.
         .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
-        .package(url: "https://github.com/vapor/jwt.git", from: "4.0.0"),
+        .package(url: "https://github.com/vapor/jwt.git", exact: "5.0.0-rc.1"),
     ],
     targets: [
         .target(name: "FCM", dependencies: [

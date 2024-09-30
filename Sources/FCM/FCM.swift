@@ -4,7 +4,7 @@ import JWT
 
 // MARK: Engine
 
-public struct FCM {
+public struct FCM: Sendable {
     let application: Application
     
     let client: Client
@@ -62,18 +62,20 @@ extension FCM {
         nonmutating set {
             application.storage[ConfigurationKey.self] = newValue
             if let newValue = newValue {
-                warmUpCache(with: newValue.email)
+                Task {
+                    await warmUpCache(with: newValue.email)
+                }
             }
         }
     }
     
-    private func warmUpCache(with email: String) {
+    private func warmUpCache(with email: String) async {
         if gAuth == nil {
             gAuth = GAuthPayload(iss: email, sub: email, scope: scope, aud: audience)
         }
         if jwt == nil {
             do {
-                jwt = try generateJWT()
+                jwt = try await generateJWT()
             } catch {
                 fatalError("FCM Unable to generate JWT: \(error)")
             }
