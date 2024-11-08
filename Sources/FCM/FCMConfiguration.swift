@@ -1,7 +1,7 @@
 import Foundation
 import Vapor
 
-public struct FCMConfiguration {
+public struct FCMConfiguration : @unchecked Sendable {
     let email, projectId, key: String
     let serverKey, senderId: String?
     

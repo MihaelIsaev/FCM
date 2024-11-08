@@ -2,7 +2,7 @@ import Foundation
 
 public typealias FCMMessageDefault = FCMMessage<FCMApnsPayload>
 
-public class FCMMessage<APNSPayload>: Codable where APNSPayload: FCMApnsPayloadProtocol {
+public class FCMMessage<APNSPayload>: @unchecked Sendable, Codable where APNSPayload: FCMApnsPayloadProtocol {
     /// Output Only.
     /// The identifier of the message sent,
     /// in the format of projects/*/messages/{message_id}.
