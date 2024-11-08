@@ -7,7 +7,7 @@
 ///     var myCustomKey: String
 ///
 ///     init(aps: FCMApnsApsObject, myCustomKey: String) {
-///          self.aps = aps
+///         self.aps = aps
 ///         self.myCustomKey = myCustomKey
 ///     }
 /// }

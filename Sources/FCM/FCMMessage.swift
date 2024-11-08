@@ -6,14 +6,14 @@ public struct FCMMessage<APNSPayload>: Sendable, Codable where APNSPayload: FCMA
     /// Output Only.
     /// The identifier of the message sent,
     /// in the format of projects/*/messages/{message_id}.
-    public let name: String
+    public var name: String
     
     /// Input only. Arbitrary key/value payload.
-    public let data: [String: String]
+    public var data: [String: String]
     
     /// Input only.
     /// Basic notification template to use across all platforms.
-    public let notification: FCMNotification?
+    public var notification: FCMNotification?
     
     /// Input only.
     /// Android specific options for messages sent through FCM connection server.
@@ -30,13 +30,13 @@ public struct FCMMessage<APNSPayload>: Sendable, Codable where APNSPayload: FCMA
     // MARK: - Union field target. Required. Input only. Target to send a message to. target can be only one of the following:
     
     /// Registration token to send a message to.
-    public let token: String?
+    public var token: String?
     
     /// Topic name to send a message to, e.g. "weather". Note: "/topics/" prefix should not be provided.
-    public let topic: String?
+    public var topic: String?
     
     /// Condition to send a message to, e.g. "'foo' in topics && 'bar' in topics".
-    public let condition: String?
+    public var condition: String?
     
     /// Initialization with device token
     public init(token: String? = nil,

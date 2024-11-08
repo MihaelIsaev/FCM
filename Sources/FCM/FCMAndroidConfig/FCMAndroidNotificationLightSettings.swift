@@ -15,17 +15,17 @@ public struct FCMAndroidNotificationLightSettings: Sendable, Codable, Equatable 
     }
     
     /// Required. Set color of the LED with google.type.Color.
-    public let color: Color
+    public var color: Color
 
     /// Required. Along with light_off_duration, define the blink rate of LED flashes.
     /// Resolution defined by proto.Duration
     /// A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".
-    public let lightOnDuration: String
+    public var lightOnDuration: String
 
     /// Required. Along with light_on_duration, define the blink rate of LED flashes.
     /// Resolution defined by proto.Duration
     /// A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".
-    public let lightOffDuration: String
+    public var lightOffDuration: String
     
     init(color: Color, lightOnDuration: String, lightOffDuration: String) {
         self.color = color

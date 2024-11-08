@@ -3,7 +3,7 @@ public struct FCMAndroidConfig: Sendable, Codable, Equatable {
         case collapseKey = "collapse_key"
         case priority
         case ttl
-        case restricedPackageName = "restricted_package_name"
+        case restrictedPackageName = "restricted_package_name"
         case data
         case notification
     }
@@ -29,7 +29,7 @@ public struct FCMAndroidConfig: Sendable, Codable, Equatable {
     public var ttl: String?
     
     /// Package name of the application where the registration tokens must match in order to receive the message.
-    public var restricedPackageName: String?
+    public var restrictedPackageName: String?
     
     /// Arbitrary key/value payload.
     /// If present, it will override FCMMessage.data.
@@ -43,14 +43,14 @@ public struct FCMAndroidConfig: Sendable, Codable, Equatable {
         collapseKey: String? = nil,
         priority: FCMAndroidMessagePriority,
         ttl: String? = nil,
-        restricedPackageName: String? = nil,
+        restrictedPackageName: String? = nil,
         data: [String : String]? = nil,
         notification: FCMAndroidNotification? = nil
     ) {
         self.collapseKey = collapseKey
         self.priority = priority
         self.ttl = ttl
-        self.restricedPackageName = restricedPackageName
+        self.restrictedPackageName = restrictedPackageName
         self.data = data
         self.notification = notification
     }

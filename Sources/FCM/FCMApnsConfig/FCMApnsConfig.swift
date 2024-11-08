@@ -1,16 +1,16 @@
 import Foundation
 
-final public class FCMApnsConfig<P>: Sendable, Codable where P: FCMApnsPayloadProtocol & Sendable {
+public struct FCMApnsConfig<P>: Sendable, Codable where P: FCMApnsPayloadProtocol & Sendable {
     /// HTTP request headers defined in Apple Push Notification Service.
     /// Refer to APNs request headers for supported headers, e.g. "apns-priority": "10".
-    public let headers: [String: String]
+    public var headers: [String: String]
     
     /// APNs payload as a JSON object, including both aps dictionary and custom payload.
     /// See Payload Key Reference. If present, it overrides FCMNotification.title and FCMNotification.body.
-    public let payload: P
+    public var payload: P
 
     /// FCM Options to send meta data
-    public let options: FCMOptions?
+    public var options: FCMOptions?
 
     // MARK: - Public Initializers
     
@@ -31,7 +31,7 @@ final public class FCMApnsConfig<P>: Sendable, Codable where P: FCMApnsPayloadPr
 
 extension FCMApnsConfig where P == FCMApnsPayload {
     /// Use this if you need only aps object
-    public convenience init(headers: [String: String]? = nil, aps: FCMApnsApsObject? = nil, options: FCMOptions? = nil) {
+    public init(headers: [String: String]? = nil, aps: FCMApnsApsObject? = nil, options: FCMOptions? = nil) {
         if let aps {
             self.init(headers: headers, payload: FCMApnsPayload(aps: aps), options: options)
         } else {
