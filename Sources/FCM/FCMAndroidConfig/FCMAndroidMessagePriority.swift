@@ -1,4 +1,4 @@
-public enum FCMAndroidMessagePriority: String, Codable, Equatable {
+public enum FCMAndroidMessagePriority: String, Sendable, Codable, Equatable {
     /// Default priority for data messages.
     /// Normal priority messages won't open network connections on a sleeping device,
     /// and their delivery may be delayed to conserve the battery.

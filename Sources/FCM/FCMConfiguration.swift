@@ -1,7 +1,7 @@
 import Foundation
 import Vapor
 
-public struct FCMConfiguration : @unchecked Sendable {
+public struct FCMConfiguration: Sendable {
     let email, projectId, key: String
     let serverKey, senderId: String?
     
@@ -10,7 +10,7 @@ public struct FCMConfiguration : @unchecked Sendable {
     public var apnsDefaultConfig: FCMApnsConfig<FCMApnsPayload>?
     public var androidDefaultConfig: FCMAndroidConfig?
     public var webpushDefaultConfig: FCMWebpushConfig?
-    
+
     // MARK: Initializers
     
     public init (email: String, projectId: String, key: String, serverKey: String? = nil, senderId: String? = nil) {
@@ -59,7 +59,7 @@ public struct FCMConfiguration : @unchecked Sendable {
             let email = Environment.get("FCM_EMAIL"),
             let projectId = Environment.get("FCM_PROJECT_ID"),
             let keyPath = Environment.get("FCM_KEY_PATH")
-            else {
+        else {
             fatalError("FCM envCredentials not set")
         }
         let serverKey = Environment.get("FCM_SERVER_KEY")
@@ -86,7 +86,7 @@ public struct FCMConfiguration : @unchecked Sendable {
             let email = Environment.get("FCM_EMAIL"),
             let projectId = Environment.get("FCM_PROJECT_ID"),
             let rawPrivateKey = Environment.get("FCM_PRIVATE_KEY")
-            else {
+        else {
             fatalError("FCM envCredentials not set")
         }
         return .init(email: email, projectId: projectId, key: rawPrivateKey.replacingOccurrences(of: "\\n", with: "\n"))

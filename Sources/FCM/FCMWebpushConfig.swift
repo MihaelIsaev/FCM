@@ -1,4 +1,4 @@
-public struct FCMWebpushConfig: Codable {
+public struct FCMWebpushConfig: Sendable, Codable {
     /// HTTP headers defined in webpush protocol.
     /// Refer to Webpush protocol for supported headers, e.g. "TTL": "15".
     public var headers: [String: String]?

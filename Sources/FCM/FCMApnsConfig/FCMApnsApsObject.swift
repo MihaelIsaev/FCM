@@ -1,6 +1,6 @@
 // The following struct is based on
 // https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification
-public struct FCMApnsApsObject: Codable, Equatable {
+public struct FCMApnsApsObject: Sendable, Codable, Equatable {
     /// The information for displaying an alert.
     /// A dictionary is recommended.
     /// If you specify a string, the alert displays your string as the body text.

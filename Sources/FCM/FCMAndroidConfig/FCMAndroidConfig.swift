@@ -1,7 +1,16 @@
-public struct FCMAndroidConfig: Codable, Equatable {
+public struct FCMAndroidConfig: Sendable, Codable, Equatable {
+    enum CodingKeys: String, CodingKey {
+        case collapseKey = "collapse_key"
+        case priority
+        case ttl
+        case restricedPackageName = "restricted_package_name"
+        case data
+        case notification
+    }
+    
     /// An identifier of a group of messages that can be collapsed, so that only the last message gets sent when delivery can be resumed.
     /// A maximum of 4 different collapse keys is allowed at any given time.
-    public var collapse_key: String?
+    public var collapseKey: String?
     
     /// Message priority. Can take "normal" and "high" values.
     /// For more information, see Setting the priority of a message.
@@ -20,7 +29,7 @@ public struct FCMAndroidConfig: Codable, Equatable {
     public var ttl: String?
     
     /// Package name of the application where the registration tokens must match in order to receive the message.
-    public var restricted_package_name: String?
+    public var restricedPackageName: String?
     
     /// Arbitrary key/value payload.
     /// If present, it will override FCMMessage.data.
@@ -30,16 +39,18 @@ public struct FCMAndroidConfig: Codable, Equatable {
     public var notification: FCMAndroidNotification?
 
     /// Public Initializer
-    public init(collapse_key: String? = nil,
-                priority: FCMAndroidMessagePriority = .normal,
-                ttl: String? = nil,
-                restricted_package_name: String? = nil,
-                data: [String: String]? = nil,
-                notification: FCMAndroidNotification? = nil) {
-        self.collapse_key = collapse_key
+    init(
+        collapseKey: String? = nil,
+        priority: FCMAndroidMessagePriority,
+        ttl: String? = nil,
+        restricedPackageName: String? = nil,
+        data: [String : String]? = nil,
+        notification: FCMAndroidNotification? = nil
+    ) {
+        self.collapseKey = collapseKey
         self.priority = priority
         self.ttl = ttl
-        self.restricted_package_name = restricted_package_name
+        self.restricedPackageName = restricedPackageName
         self.data = data
         self.notification = notification
     }
