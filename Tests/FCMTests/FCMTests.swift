@@ -1,8 +1,10 @@
-import XCTest
+import Testing
 @testable import FCM
 
-final class FCMTests: XCTestCase {
-    func testExample() {
-        XCTAssertFalse(false)
+@Suite("FCM Tests")
+struct FCMTests {
+    @Test
+    func example() async throws {
+        #expect(1 == 1)
     }
 }

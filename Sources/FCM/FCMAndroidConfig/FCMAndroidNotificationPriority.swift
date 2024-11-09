@@ -5,7 +5,7 @@
 //  Created by Oleh Hudeichuk on 13.12.2019.
 //
 
-public enum FCMAndroidNotificationPriority: String, Codable, Equatable {
+public enum FCMAndroidNotificationPriority: String, Sendable, Codable, Equatable {
     /// If priority is unspecified, notification priority is set to PRIORITY_DEFAULT.
     case unspecified = "PRIORITY_UNSPECIFIED"
 

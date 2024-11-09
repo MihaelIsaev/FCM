@@ -10,6 +10,8 @@ extension FCM {
         guard let configuration = self.configuration else {
             fatalError("FCM not configured. Use app.fcm.configuration = ...")
         }
+        var message = message
+        
         if message.apns == nil,
             let apnsDefaultConfig = apnsDefaultConfig {
             message.apns = apnsDefaultConfig

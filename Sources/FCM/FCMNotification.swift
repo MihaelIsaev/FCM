@@ -1,4 +1,4 @@
-public struct FCMNotification: Codable {
+public struct FCMNotification: Sendable, Codable {
     /// The notification's title.
     var title: String
     

@@ -42,15 +42,6 @@ public struct FCMError: Error, Decodable {
     }
 }
 
-extension EventLoopFuture where Value == ClientResponse {
-    func validate() -> EventLoopFuture<ClientResponse> {
-        return flatMapThrowing { (response) in
-            try response.validate()
-            return response
-        }
-    }
-}
-
 extension ClientResponse {
     func validate() throws {
         guard 200 ..< 300 ~= self.status.code else {

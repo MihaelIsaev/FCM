@@ -2,14 +2,14 @@ import Foundation
 
 public typealias FCMMessageDefault = FCMMessage<FCMApnsPayload>
 
-public class FCMMessage<APNSPayload>: @unchecked Sendable, Codable where APNSPayload: FCMApnsPayloadProtocol {
+public struct FCMMessage<APNSPayload>: Sendable, Codable where APNSPayload: FCMApnsPayloadProtocol {
     /// Output Only.
     /// The identifier of the message sent,
     /// in the format of projects/*/messages/{message_id}.
     public var name: String
     
     /// Input only. Arbitrary key/value payload.
-    public var data: [String: String] = [:]
+    public var data: [String: String]
     
     /// Input only.
     /// Basic notification template to use across all platforms.
@@ -27,7 +27,7 @@ public class FCMMessage<APNSPayload>: @unchecked Sendable, Codable where APNSPay
     /// Apple Push Notification Service specific options.
     public var apns: FCMApnsConfig<APNSPayload>?
     
-    //MARK: - Union field target. Required. Input only. Target to send a message to. target can be only one of the following:
+    // MARK: - Union field target. Required. Input only. Target to send a message to. target can be only one of the following:
     
     /// Registration token to send a message to.
     public var token: String?
@@ -48,13 +48,13 @@ public class FCMMessage<APNSPayload>: @unchecked Sendable, Codable where APNSPay
                 apns: FCMApnsConfig<APNSPayload>? = nil) {
         self.token = token
         self.notification = notification
-        if let data = data {
-            self.data = data
-        }
+        self.data = data ?? [:]
         self.name = name ?? UUID().uuidString
         self.android = android
         self.webpush = webpush
         self.apns = apns
+        self.topic = nil
+        self.condition = nil
     }
     
     /// Initialization with topic
@@ -67,13 +67,13 @@ public class FCMMessage<APNSPayload>: @unchecked Sendable, Codable where APNSPay
                 apns: FCMApnsConfig<APNSPayload>? = nil) {
         self.topic = topic
         self.notification = notification
-        if let data = data {
-            self.data = data
-        }
+        self.data = data ?? [:]
         self.name = name ?? UUID().uuidString
         self.android = android
         self.webpush = webpush
         self.apns = apns
+        self.condition = nil
+        self.token = nil
     }
     
     /// Initialization with condition
@@ -87,19 +87,19 @@ public class FCMMessage<APNSPayload>: @unchecked Sendable, Codable where APNSPay
     {
         self.condition = condition
         self.notification = notification
-        if let data = data {
-            self.data = data
-        }
+        self.data = data ?? [:]
         self.name = name ?? UUID().uuidString
         self.android = android
         self.webpush = webpush
         self.apns = apns
+        self.token = nil
+        self.topic = nil
     }
 }
 
 extension FCMMessage where APNSPayload == FCMApnsPayload {
     /// Initialization with device token
-    public convenience init(token: String,
+    public init(token: String,
                 notification: FCMNotification?,
                 data: [String: String]? = nil,
                 name: String? = nil,
@@ -115,7 +115,7 @@ extension FCMMessage where APNSPayload == FCMApnsPayload {
     }
     
     /// Initialization with topic
-    public convenience init(topic: String,
+    public init(topic: String,
                 notification: FCMNotification?,
                 data: [String: String]? = nil,
                 name: String? = nil,
@@ -131,7 +131,7 @@ extension FCMMessage where APNSPayload == FCMApnsPayload {
     }
     
     /// Initialization with condition
-    public convenience init(condition: String,
+    public init(condition: String,
                 notification: FCMNotification?,
                 data: [String: String]? = nil,
                 name: String? = nil,

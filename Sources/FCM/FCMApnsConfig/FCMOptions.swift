@@ -1,4 +1,4 @@
-public struct FCMOptions: Codable, Equatable, FCMOptionsProtocol {
+public struct FCMOptions: Sendable, Codable, Equatable, FCMOptionsProtocol {
     /// Label associated with the message's analytics data.
     public var analyticsLabel: String
     /// Image to be shown in push messages
