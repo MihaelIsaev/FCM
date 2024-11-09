@@ -122,31 +122,6 @@ func routes(_ app: Application) async throws {
 `FCMMessage` struct is absolutely the same as `Message` struct in Firebase docs https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages
 So you could take a look on its source code to build proper message.
 
-# Batch sending
-
-### Preparation
-
-1. Go to [Firebase Console](https://console.firebase.google.com/) -> Project Settings -> Cloud Messaging tab
-2. Copy `Server Key` from `Project Credentials` area
-3. Put server key into environment variables as `FCM_SERVER_KEY=<YOUR_SERVER_KEY>` (or put it into `serviceAccountKey.json` file as `server_key`)
-
-### Sending
-
-```swift
-// get it from iOS/Android SDK
-let token1 = "<YOUR FIREBASE DEVICE TOKEN>"
-let token2 = "<YOUR FIREBASE DEVICE TOKEN>"
-let token3 = "<YOUR FIREBASE DEVICE TOKEN>"
-...
-let token100500 = "<YOUR FIREBASE DEVICE TOKEN>"
-
-let notification = FCMNotification(title: "Life is great! 😃", body: "Swift one love! ❤️")
-let message = FCMMessage(notification: notification)
-application.fcm.batchSend(message, tokens: [token1, token2, token3, ..., token100500]).map {
-    print("sent!")
-}
-```
-
 # APNS to Firebase token conversion
 
 You can throw away Firebase libs from dependencies of your iOS apps because you can send pure APNS tokens to your server and it will register it in Firebase by itself.
