@@ -171,4 +171,25 @@ let tokens = try await application.fcm.registerAPNS(
 
 ## Contributors
 
-> Special thanks to @grahamburgsma for `GoogleError` and `FCMError` #10
+Thanks to these amazing people for their contributions:
+
+- **[@ptoffy](https://github.com/ptoffy)** for enhancements in Swift 6 support [#50](https://github.com/MihaelIsaev/FCM/pull/50)
+- **[@gennaro-safehill](https://github.com/gennaro-safehill)** for Swift 6 and async/await support [#48](https://github.com/MihaelIsaev/FCM/pull/48)
+- **[@paunik](https://github.com/paunik)** for adding image support in options [#44](https://github.com/MihaelIsaev/FCM/pull/44)
+- **[@chinh-tran](https://github.com/chinh-tran)** for retrieving subscribed topics [#43](https://github.com/MihaelIsaev/FCM/pull/43)
+- **[@apemaia99](https://github.com/apemaia99)** for supporting multiple configurations/clients [#42](https://github.com/MihaelIsaev/FCM/pull/42)
+- **[@sroebert](https://github.com/sroebert)** for removing unneeded setting of `ignoreUncleanSSLShutdown` [#36](https://github.com/MihaelIsaev/FCM/pull/36)
+- **[@sroebert](https://github.com/sroebert)** for marking all `FCMAndroidConfig` fields as optional [#34](https://github.com/MihaelIsaev/FCM/pull/34)
+- **[@JCTec](https://github.com/JCTec)** for Swift 5.2.1 support [#33](https://github.com/MihaelIsaev/FCM/pull/33)
+- **[@Andrewangeta](https://github.com/Andrewangeta)** for reading service account from JSON string env variable [#31](https://github.com/MihaelIsaev/FCM/pull/31)
+- **[@siemensikkema](https://github.com/siemensikkema)** for batch messaging improvements [#30](https://github.com/MihaelIsaev/FCM/pull/30)
+- **[@krezzoid](https://github.com/krezzoid)** for token issue decoding fix [#27](https://github.com/MihaelIsaev/FCM/pull/27)
+- 💎 **[@grahamburgsma](https://github.com/grahamburgsma)** for fixing memory issues [#26](https://github.com/MihaelIsaev/FCM/pull/26)
+- **[@geeksweep](https://github.com/geeksweep)**, **[@maximkrouk](https://github.com/maximkrouk)**, **[@gustavoggs](https://github.com/gustavoggs)** for README updates [#22](https://github.com/MihaelIsaev/FCM/pull/22), [#23](https://github.com/MihaelIsaev/FCM/pull/23), [#37](https://github.com/MihaelIsaev/FCM/pull/37)
+- **[@emrahsifoglu](https://github.com/emrahsifoglu)** for optional `priority` option [#20](https://github.com/MihaelIsaev/FCM/pull/20)
+- **[@nerzh](https://github.com/nerzh)** for enhancements in `FCMAndroidNotification` [#16](https://github.com/MihaelIsaev/FCM/pull/16), [#18](https://github.com/MihaelIsaev/FCM/pull/18)
+- **[@FredericRuaudel](https://github.com/FredericRuaudel)** for multiple useful enhancements [#13](https://github.com/MihaelIsaev/FCM/pull/13), [#14](https://github.com/MihaelIsaev/FCM/pull/14), [#15](https://github.com/MihaelIsaev/FCM/pull/15)
+- **[@grahamburgsma](https://github.com/grahamburgsma)** for `GoogleError` and `FCMError` [#10](https://github.com/MihaelIsaev/FCM/pull/10)
+- **[@simonmitchell](https://github.com/simonmitchell)** for capability for silent `content-available` push notifications [#9](https://github.com/MihaelIsaev/FCM/pull/9)
+- **[@siemensikkema](https://github.com/siemensikkema)** for updating to JWT `v3` [#3](https://github.com/MihaelIsaev/FCM/pull/3)
+- **[@pedantix](https://github.com/pedantix)** for `APNS` enhancements [#2](https://github.com/MihaelIsaev/FCM/pull/2)
