@@ -5,7 +5,7 @@
         <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT License">
     </a>
     <a href="https://swift.org">
-        <img src="https://img.shields.io/badge/swift-5.2-brightgreen.svg" alt="Swift 5.2">
+        <img src="https://img.shields.io/badge/swift-6.0-brightgreen.svg" alt="Swift 6.0">
     </a>
     <a href="https://discord.gg/q5wCPYv">
         <img src="https://img.shields.io/discord/612561840765141005" alt="Swift.Stream">
@@ -21,7 +21,9 @@ It's a swift lib that gives ability to send push notifications through Firebase 
 
 Built for Vapor4 and depends on `JWT` Vapor lib.
 
-> 💡Vapor3 version is available in `vapor3` branch and from `1.0.0` tag
+> 💡 Vapor3 version is available in **[vapor3](https://github.com/MihaelIsaev/FCM/tree/vapor3)** branch and from `1.0.0` tag
+>
+> 💡 Stable Vapor4 ELF version is available in **[v2](https://github.com/MihaelIsaev/FCM/tree/v2)** branch and from `2.0.0` tag
 
 If you have great ideas of how to improve this package write me (@iMike#3049) in [Vapor's discord chat](http://vapor.team) or just send pull request.
 
@@ -33,7 +35,7 @@ Edit your `Package.swift`
 
 ```swift
 //add this repo to dependencies
-.package(url: "https://github.com/MihaelIsaev/FCM.git", from: "2.13.0")
+.package(url: "https://github.com/MihaelIsaev/FCM.git", from: "3.0.0-beta.1")
 //and don't forget about targets
 .product(name: "FCM", package: "FCM")
 ```
