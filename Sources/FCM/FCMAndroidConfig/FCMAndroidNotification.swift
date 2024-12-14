@@ -153,7 +153,7 @@ public struct FCMAndroidNotification: Sendable, Codable, Equatable {
     /// If present, it will override google.firebase.fcm.v1.Notification.image.
     public var image: String?
     
-    init(
+    public init(
         title: String? = nil,
         body: String? = nil,
         icon: String? = nil,
