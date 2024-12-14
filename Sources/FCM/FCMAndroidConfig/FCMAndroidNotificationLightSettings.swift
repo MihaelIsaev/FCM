@@ -27,7 +27,7 @@ public struct FCMAndroidNotificationLightSettings: Sendable, Codable, Equatable 
     /// A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".
     public var lightOffDuration: String
     
-    init(color: Color, lightOnDuration: String, lightOffDuration: String) {
+    public init(color: Color, lightOnDuration: String, lightOffDuration: String) {
         self.color = color
         self.lightOnDuration = lightOnDuration
         self.lightOffDuration = lightOffDuration
