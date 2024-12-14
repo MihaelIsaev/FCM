@@ -39,7 +39,7 @@ public struct FCMAndroidConfig: Sendable, Codable, Equatable {
     public var notification: FCMAndroidNotification?
 
     /// Public Initializer
-    init(
+    public init(
         collapseKey: String? = nil,
         priority: FCMAndroidMessagePriority,
         ttl: String? = nil,
